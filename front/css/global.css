@@ -1,0 +1,57 @@
+.container {
+    display: flex;
+    justify-content: center;
+}
+.left-panel{
+    border-right: 1px solid black;
+    flex: 1;
+}
+.right-panel{
+    height: 100vh;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex: 1;
+    background-color: rgb(59, 203, 155);
+}
+.submit-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 30px;
+    background-color: aquamarine;
+    width: 300px;
+}
+h1 {
+    text-align: center;
+}
+input {
+    padding: 10px;
+    margin-bottom: 20px;
+}
+.tangibles-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    align-items: stretch;
+}
+.checkbox-group {
+    display: flex;
+}
+.sign-up {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: gray;
+}
+.button-style {
+    padding: 5px 50px;
+}
