@@ -3,7 +3,8 @@
     justify-content: center;
 }
 .left-panel{
-    border-right: 1px solid black;
+    background-color: rgb(59, 203, 155);
+    border-right: 2px solid black;
     flex: 1;
 }
 .right-panel{
@@ -54,4 +55,18 @@ input {
 }
 .button-style {
     padding: 5px 30px;
+    animation: buttonAnimation;
+    margin-bottom: 20px;
 }
+.button-style:hover {
+    transform: scale(1.1);
+}
+.nav-bar {
+    display: flex;
+    background-color: aquamarine;
+    border-bottom: 2px solid black;
+    padding-left: 20px;
+}
+/* notes: */
+/* keyframes are defined with @keyframes and require 'from' and 'to' */
+/* they also only load when you start the page */
