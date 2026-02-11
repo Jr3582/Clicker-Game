@@ -6,25 +6,28 @@
     <link rel="stylesheet" href="../css/global.css">
     <script src="../js/forgot_pass.js" defer></script>
     <script src="../js/navbar.js" defer></script>
+    <script src="../js/snow_flake.js" defer></script>
     <title>Document</title>
 </head>
 <body>
     <div id="navbar">
-
     </div>
-    <div class="container" style="align-items: center; height: 100vh; flex-direction: column;">
-        <h1>Forgot Password?</h1>
-        <form>
-            <label for="email">Enter your email</label>
-            <input type="text" id="email" name="email">
-            <div class="checkbox-group">
-                <span id="reset_text" style="color: green; min-height: 19px;"></span>
-            </div>
-            <div class="submit-button">
-                <button class="button-style">Reset Password</button>
-                <a href="landing.html">Back to login!</a>
-            </div>
-        </form>
+    <div class="snow-wrapper" id="sn_wrapper">
+        <canvas id="snowflakes"></canvas>
+        <div class="container" style="align-items: center; height: 100vh; flex-direction: column;">
+            <h1>Forgot Password?</h1>
+            <form>
+                <label for="email">Enter your email</label>
+                <input type="text" id="email" name="email">
+                <div class="checkbox-group">
+                    <span id="reset_text" style="color: green; min-height: 19px;"></span>
+                </div>
+                <div class="submit-button">
+                    <button  id="submit_button" class="button-style">Reset Password</button>
+                    <a href="landing.html">Back to login!</a>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>
