@@ -74,6 +74,10 @@ input {
     background-color: aquamarine;
     border-bottom: 2px solid black;
     padding-left: 20px;
+    padding-right: 20px;
+
+    justify-content: space-between;
+    align-items: center;
 }
 .fg-layer {
     display: flex;
@@ -130,8 +134,16 @@ canvas {
   z-index: 4;
   pointer-events: none;
 }
+.gold_coin{
+    width: 53;
+    height: 48;
+}
 html, body {
   margin: 0;
+}
+a {
+    text-decoration: none;
+    color: inherit;
 }
 /* notes: */
 /* keyframes are defined with @keyframes and require 'from' and 'to' */

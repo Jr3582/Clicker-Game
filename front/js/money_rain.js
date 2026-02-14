@@ -19,12 +19,15 @@ function spawn_coin() {
         y: -100,
         width: 53,
         height: 48,
-        speed: 2
+        speed: 2,
+        angle: Math.random() * Math.PI * 2,
+        rotate_speed: Math.random() * (Math.PI / 90)
     })
 }
 
 function animate () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
 
     if(coins.length < max_coins) {
         spawn_timer++;
@@ -36,13 +39,19 @@ function animate () {
 
     for(const coin of coins) {
         coin.y += coin.speed;
+        coin.angle += coin.rotate_speed;
 
-        ctx.beginPath();
-        ctx.drawImage(coin_img, coin.x, coin.y, coin.width, coin.height);
+        let centerX = coin.x + (coin.width / 2);
+        let centerY = coin.y + (coin.height / 2);
 
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(coin.angle);
+        ctx.drawImage(coin_img, -coin.width / 2, -coin.height / 2, coin.width, coin.height);
+        ctx.restore();
         if(coin.y >= canvas.height) {
             coin.x = Math.random() * canvas.width;
-            coin.y = -100;
+            coin.y = -200 * Math.random();
         }
 
     }
