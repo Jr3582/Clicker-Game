@@ -47,6 +47,18 @@ const sell_hedge = document.getElementById("sell_tech");
 const sell_space_mine = document.getElementById("sell_space_mine");
 const sell_moon = document.getElementById("sell_moon");
 
+//mps text DOM nodes
+const lemonade_mps_text = document.getElementById("lemonade_mps");
+const food_mps_text = document.getElementById("food_mps");
+const store_mps_text = document.getElementById("store_mps");
+const restaurant_mps_text = document.getElementById("restaurant_mps");
+const apartment_mps_text = document.getElementById("apartment_mps");
+const real_estate_mps_text = document.getElementById("real_estate_mps");
+const tech_mps_text = document.getElementById("tech_mps");
+const hedge_mps_text = document.getElementById("hedge_mps");
+const mine_mps_text = document.getElementById("mine_mps");
+const moon_mps_text = document.getElementById("moon_mps");
+
 //pop up stuff
 const overlay = document.getElementById("overlay");
 const event_text = document.getElementById("event_text");
@@ -323,7 +335,7 @@ buy_lemonade.addEventListener("click", () => {
             fifty_lemonades = true;
             lemon_MPS *= 2;
             money_per_sec *= 2;
-            ack_btn_function("lemonade stands");
+            double_money_function("lemonade stands");
         }
 
         const result = buy_property({
@@ -346,6 +358,7 @@ buy_lemonade.addEventListener("click", () => {
         lemonade_stands.textContent = lemonade;
         buy_lemonade.textContent = "Buy for $" + abbreviate(buy_lemonade_price);
         sell_lemonade.textContent = "Sell for $" + abbreviate(sell_lemonade_price);
+        lemonade_mps_text.textContent = lemon_MPS;
         update_img(lemonade, lemonade_img, "lemonade-img");
         update_net_worth();
     }
@@ -358,7 +371,7 @@ buy_food.addEventListener("click", () => {
             fifty_foods = true;
             food_MPS *= 2;
             money_per_sec *= 2;
-            ack_btn_function("food trucks");
+            double_money_function("food trucks");
         }
 
         const result = buy_property({
@@ -381,6 +394,7 @@ buy_food.addEventListener("click", () => {
         food_trucks.textContent = food;
         buy_food.textContent = "Buy for $" + abbreviate(buy_food_price);
         sell_food.textContent = "Sell for $" + abbreviate(sell_food_price);
+        food_mps_text.textContent = food_MPS;
         update_img(food, food_img, "food-img");
         update_net_worth();
     }
@@ -393,7 +407,7 @@ buy_store.addEventListener("click", () => {
             fifty_stores = true;
             store_MPS *= 2;
             money_per_sec *= 2;
-            ack_btn_function("grocery stores");
+            double_money_function("grocery stores");
         }
 
         const result = buy_property({
@@ -415,6 +429,7 @@ buy_store.addEventListener("click", () => {
         small_stores.textContent = store;
         buy_store.textContent = "Buy for $" + abbreviate(buy_store_price);
         sell_store.textContent = "Sell for $" + abbreviate(sell_store_price);
+        store_mps_text = store_MPS;
         update_img(store, store_img, "store-img");
         update_net_worth();
     }
@@ -427,7 +442,7 @@ buy_restaurant.addEventListener("click", () => {
             fifty_restaurants = true;
             restaurant_MPS *= 2;
             money_per_sec *= 2;
-            ack_btn_function("restaurants");
+            double_money_function("restaurants");
         }
 
         const result = buy_property({
@@ -449,6 +464,7 @@ buy_restaurant.addEventListener("click", () => {
         restaurants.textContent = restaurant;
         buy_restaurant.textContent = "Buy for $" + abbreviate(buy_restaurant_price);
         sell_restaurant.textContent = "Sell for $" + abbreviate(sell_restaurant_price);
+        restaurant_mps_text.textContent = real_estate_MPS;
         update_img(restaurant, restaurant_img, "restaurant-img");
         update_net_worth();
     }
@@ -461,7 +477,7 @@ buy_apartment.addEventListener("click", () => {
             fifty_apartments = true;
             apartment_MPS *= 2;
             money_per_sec *= 2;
-            ack_btn_function("apartment complexes");
+            double_money_function("apartment complexes");
         }
 
         const result = buy_property({
@@ -483,6 +499,7 @@ buy_apartment.addEventListener("click", () => {
         apartments.textContent = apartment;
         buy_apartment.textContent = "Buy for $" + abbreviate(buy_apartment_price);
         sell_apartment.textContent = "Sell for $" + abbreviate(sell_apartment_price);
+        apartment_mps_text.textContent = apartment_MPS;
         update_img(apartment, apartment_img, "apartment-img");
         update_net_worth();
     }
@@ -495,7 +512,7 @@ buy_real_estate.addEventListener("click", () => {
             fifty_real_estates = true;
             real_estate_MPS *= 2;
             money_per_sec *= 2;
-            ack_btn_function("real estate properties");
+            double_money_function("real estate properties");
         }
 
         const result = buy_property({
@@ -517,6 +534,7 @@ buy_real_estate.addEventListener("click", () => {
         real_estates.textContent = real_estate;
         buy_real_estate.textContent = "Buy for $" + abbreviate(buy_real_estate_price);
         sell_real_estate.textContent = "Sell for $" + abbreviate(sell_real_estate_price);
+        real_estate_mps_text.textContent = real_estate_MPS;
         update_img(real_estate, real_estate_img, "real-estate-img");
         update_net_worth();
     }
@@ -529,7 +547,7 @@ buy_tech.addEventListener("click", () => {
             fifty_techs = true;
             tech_MPS *= 2;
             money_per_sec *= 2;
-            ack_btn_function("tech startups");
+            double_money_function("tech startups");
         }
 
         const result = buy_property({
@@ -552,6 +570,7 @@ buy_tech.addEventListener("click", () => {
         tech_starts.textContent = tech;
         buy_tech.textContent = "Buy for $" + abbreviate(buy_tech_price);
         sell_tech.textContent = "Sell for $" + abbreviate(sell_tech_price);
+        tech_mps_text.textContent = tech_MPS;
         update_img(tech, tech_start_img, "tech-img");
         update_net_worth();
     }
@@ -564,7 +583,7 @@ buy_hedge.addEventListener("click", () => {
             fifty_hedge_funds = true;
             hedge_MPS *= 2;
             money_per_sec *= 2;
-            ack_btn_function("hedge funds");
+            double_money_function("hedge funds");
         }
 
         const result = buy_property({
@@ -586,6 +605,7 @@ buy_hedge.addEventListener("click", () => {
         hedge_funds.textContent = hedge;
         buy_hedge.textContent = "Buy for $" + abbreviate(buy_hedge_price);
         sell_hedge.textContent = "Sell for $" + abbreviate(sell_hedge_price);
+        hedge_mps_text.textContent = hedge_MPS;
         update_img(hedge, hedge_fund_img, "hedge-fund-img");        
         update_net_worth();
     }
@@ -598,7 +618,7 @@ buy_space_mine.addEventListener("click", () => {
             fifty_minings = true;
             mine_MPS *= 2;
             money_per_sec *= 2;
-            ack_btn_function("space mines");
+            double_money_function("space mines");
         }
 
         const result = buy_property({
@@ -621,6 +641,7 @@ buy_space_mine.addEventListener("click", () => {
         space_mines.textContent = mine;
         buy_space_mine.textContent = "Buy for $" + abbreviate(buy_mine_price);
         sell_space_mine.textContent = "Sell for $" + abbreviate(sell_mine_price);
+        mine_mps_text.textContent = mine_MPS;
         update_bg();
         update_net_worth();
     }
@@ -633,7 +654,7 @@ buy_moon.addEventListener("click", () => {
             fifty_moons = true;
             moon_MPS *= 2;
             money_per_sec *= 2;
-            ack_btn_function("moon colonies");
+            double_money_function("moon colonies");
         }
 
         const result = buy_property({
@@ -655,6 +676,7 @@ buy_moon.addEventListener("click", () => {
         moon_colonies.textContent = moon;
         buy_moon.textContent = "Buy for $" + abbreviate(buy_moon_price);
         sell_moon.textContent = "Sell for $" + abbreviate(sell_moon_price);
+        moon_mps_text.textContent = moon_MPS;
         update_bg();
         update_net_worth();
     }
@@ -1096,7 +1118,7 @@ function abbreviate(money) {
     return Math.round(money * 10) / 10;
 }
 
-function ack_btn_function(property) {
+function double_money_function(property) {
     const special_properties = ["tech startups", "hedge funds", "space mines", "moon colonies"];
     overlay.classList.remove("hidden");
     overlay.classList.add("show");

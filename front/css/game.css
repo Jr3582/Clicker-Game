@@ -338,3 +338,11 @@ canvas {
     background-size: contain;
     background-repeat: no-repeat;
 }
+
+.mps-text {
+    color: gold;
+    -webkit-text-stroke: 0.75px black;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 900;
+    font-size: 18px;
+}
