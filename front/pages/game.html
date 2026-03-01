@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/game.css">
+    <link rel="stylesheet" href="../css/global.css">
     <script src="../js/navbar.js" defer></script>
     <script src="../js/game.js" defer></script>
     <title>Document</title>
@@ -32,13 +33,16 @@
                 You currently have: $<span id="money_text" class="money-text" style="color: purple">0</span>
                 </div>
                 <div>
-                You have a property net worth of: $<span id="net_worth_text" class="net-worth-text" style="color: orange;">0</span>
+                Total property net worth: $<span id="net_worth_text" class="net-worth-text" style="color: orange;">0</span>
                 </div>
                 <div>
                 You have a total of: <span id="property_text" class="property-text" style="color: crimson;">0</span> Properties
                 </div>
                 <div>
                 You are auto generating: $<span id="money_per_sec" class="money-per-sec-text" style="color: blue;">0</span> per second
+                </div>
+                <div>
+                Total minutes played: <span id="total_minutes_played" class="minutes-played" style="color: green">0</span> Minutes
                 </div>
             </div>
             <div class="property">
@@ -79,74 +83,75 @@
             </div>
             <div class="buy-info">
                 <div>
-                    <button class="buy-sell-btn" id="buy_lemonade" >Buy for $10</button>
-                    <button class="buy-sell-btn" id="sell_lemonade">Sell for $5</button>
+                    <button class="buy-btn" id="buy_lemonade" >Buy for $10</button>
+                    <button class="sell-btn" id="sell_lemonade">Sell for $5</button>
                     <span class="buy-text">Buy or sell a lemonade stand ($<span id="lemonade_mps" class="mps-text">1</span> / SEC)</span>
                 </div>
                 <div>
-                    <button class="buy-sell-btn" id="buy_food">Buy for $1K</button>
-                    <button class="buy-sell-btn" id="sell_food">Sell for $500</button>
+                    <button class="buy-btn" id="buy_food">Buy for $1K</button>
+                    <button class="sell-btn" id="sell_food">Sell for $500</button>
                     <span class="buy-text">Buy or sell a food truck ($<span id="food_mps" class="mps-text">80</span> / SEC)</span>
                 </div>
                 <div>
-                    <button class="buy-sell-btn" id="buy_store">Buy for $100K</button>
-                    <button class="buy-sell-btn" id="sell_store">Sell for $50K</button>
+                    <button class="buy-btn" id="buy_store">Buy for $100K</button>
+                    <button class="sell-btn" id="sell_store">Sell for $50K</button>
                     <span class="buy-text">Buy or sell a store ($<span id="store_mps" class="mps-text">800</span> / SEC)</span>
                 </div>
                 <div>
-                    <button class="buy-sell-btn" id="buy_restaurant">Buy for $1M</button>
-                    <button class="buy-sell-btn" id="sell_restaurant">Sell for $500K</button>
+                    <button class="buy-btn" id="buy_restaurant">Buy for $1M</button>
+                    <button class="sell-btn" id="sell_restaurant">Sell for $500K</button>
                     <span class="buy-text">Buy or sell a restaurant ($<span id="restaurant_mps" class="mps-text">4,800</span> / SEC)</span>
                 </div>
                 <div>
-                    <button class="buy-sell-btn" id="buy_apartment">Buy for $10M</button>
-                    <button class="buy-sell-btn" id="sell_apartment">Sell for $5M</button>
+                    <button class="buy-btn" id="buy_apartment">Buy for $10M</button>
+                    <button class="sell-btn" id="sell_apartment">Sell for $5M</button>
                     <span class="buy-text">Buy or sell a apartment complex ($<span id="apartment_mps" class="mps-text">28,800</span> / SEC)</span>
                 </div>
                 <div>
-                    <button class="buy-sell-btn" id="buy_real_estate">Buy for $100M</button>
-                    <button class="buy-sell-btn" id="sell_real_estate">Sell for $50M</button>
+                    <button class="buy-btn" id="buy_real_estate">Buy for $100M</button>
+                    <button class="sell-btn" id="sell_real_estate">Sell for $50M</button>
                     <span class="buy-text">Buy or sell a real estate empire ($<span id="real_estate_mps" class="mps-text">115,200</span> / SEC)</span>
                 </div>
                 <div>
-                    <button class="buy-sell-btn" id="buy_tech">Buy for $1B</button>
-                    <button class="buy-sell-btn" id="sell_tech">Sell for $500M</button>
+                    <button class="buy-btn" id="buy_tech">Buy for $1B</button>
+                    <button class="sell-btn" id="sell_tech">Sell for $500M</button>
                     <span class="buy-text">Buy or sell a tech startup ($<span id="tech_mps" class="mps-text">230,400</span> / SEC)</span>
                 </div>
                 <div>
-                    <button class="buy-sell-btn" id="buy_hedge">Buy for $10B</button>
-                    <button class="buy-sell-btn" id="sell_hedge">Sell for $5B</button>
+                    <button class="buy-btn" id="buy_hedge">Buy for $10B</button>
+                    <button class="sell-btn" id="sell_hedge">Sell for $5B</button>
                     <span class="buy-text">Buy or sell a hedge fund ($<span id="hedge_mps" class="mps-text">460,800</span> / SEC)</span>
                 </div>
                 <div>
-                    <button class="buy-sell-btn" id="buy_space_mine">Buy for $100B</button>
-                    <button class="buy-sell-btn" id="sell_space_mine">Sell for $50B</button>
+                    <button class="buy-btn" id="buy_space_mine">Buy for $100B</button>
+                    <button class="sell-btn" id="sell_space_mine">Sell for $50B</button>
                     <span class="buy-text">Buy or sell a space mining company ($<span id="mine_mps" class="mps-text">921,600</span> / SEC)</span>
                 </div>
                 <div>
-                    <button class="buy-sell-btn" id="buy_moon">Buy for $250B</button>
-                    <button class="buy-sell-btn" id="sell_moon">Sell for $125B</button>
+                    <button class="buy-btn" id="buy_moon">Buy for $250B</button>
+                    <button class="sell-btn" id="sell_moon">Sell for $125B</button>
                     <span class="buy-text">Buy or sell a moon colony ($<span id="moon_mps" class="mps-text">1,843,200</span> / SEC)</span>
                 </div>
             </div>
             <div class="history-title">
                 <h3>History</h3>
             </div>
-            <div class="history-text">
-                <span>hi</span>
+            <div class="history-text-container">
+                <ul class="history-container" id="history">
+                </ul>
             </div>
         </div>
         <div id="overlay">
             <div class="popup-box">
+                <div class="event-title" id="event_title">Event Title</div>
                 <div class="event-text">
-                    <span id="event_text">test</span>
+                    <span id="event_text">Event</span>
                 </div>
                 <div class="option-row">
-                    <button class="accept-button" id="accept">hi</button>
-                    <button class="acknowledge-button" id="acknowledge">ok</button>
-                    <button class="reject-button" id="reject">bye</button>
+                    <button class="accept-button" id="accept">Accept</button>
+                    <button class="acknowledge-button" id="acknowledge">:D</button>
+                    <button class="reject-button" id="reject">Reject</button>
                 </div>
-                
             </div>
         </div>
     </div>

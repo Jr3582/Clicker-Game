@@ -15,7 +15,7 @@ body {
     border-right: 2px solid black;
     justify-content: center;
     align-items: center;
-    flex: 1.5;
+    flex: 1.25;
     position: relative;
 }
 
@@ -40,8 +40,8 @@ body {
     align-items: center;
 }
 
-.money-text, .property-text, .net-worth-text, .money-per-sec-text{
-    color: rgb(0, 0, 0);
+.money-text, .property-text, .net-worth-text, .money-per-sec-text, .minutes-played {
+    -webkit-text-stroke: 0.75px black;
 }
 
 .nav-bar {
@@ -79,26 +79,79 @@ canvas {
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: column;
-    gap: 20px;
+    gap: 5px;
     width: 100%;
     border-bottom: 2px solid black;
 }
 
-.buy-sell-btn {
+.buy-info > div {
+    white-space: nowrap;
+}
+
+.buy-btn {
     margin: 10px;
     width: 125px;
     font-size: medium;
+    cursor: pointer;
+    border-radius: 20px;
+    background: linear-gradient(to right, #39FF14, mediumseagreen);
+    color: darkgreen;
+    -webkit-text-stroke: 0.5px black;
+    transition: transform 1s ease, box-shadow 1s ease;
+}
+
+.sell-btn {
+    margin: 10px;
+    width: 125px;
+    font-size: medium;
+    cursor: pointer;
+    border-radius: 20px;
+    background: linear-gradient(to bottom right, #FF3131, #ef4444);
+    color: darkred;
+    -webkit-text-stroke: 0.5px black;
+    transition: transform 1s ease, box-shadow 1s ease;
+}
+
+.buy-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 5px 5px 5px green;
+}
+
+.sell-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 5px 5px 5px red;
+}
+
+.buy-btn:active {
+    transform: translateY(3px);
+    box-shadow: 3px 3px 3px green;
+}
+
+.sell-btn:active {
+    transform: translateY(3px);
+    box-shadow: 3px 3px 3px red;
 }
 
 .buy-text {
     font-size: medium;
     font-weight: 1000;
+    overflow-x: hidden;
 }
 
 .generate-money {
     font-size: xx-large;
     font-weight: 1000;
     padding: 5px;
+    cursor: pointer;
+    transition: transform 2s ease, box-shadow 2s ease;
+    background: linear-gradient(to bottom right, #CFFF04, gold);
+    border-radius: 8px;
+}
+
+.generate-money:hover {
+    transform: scale(1.2);
+    box-shadow: 5px 5px 5px #8B8000;
+
 }
 
 .property {
@@ -132,23 +185,30 @@ canvas {
     background-color: rgb(0, 255, 170);
 }
 
-.history-text {
+.history-text-container {
+    width: 100%;
+    height: 300px;
+    overflow: scroll;
+}
+
+.history-container {
     display: flex;
     justify-content: flex-start;
-    align-items: flex-start;
-    width: 100%;
-    height: 100%;
-    gap: 20px;
+    flex-direction: column;
+    gap: 5px;
+    padding-left: 10px;
+    font-size: 18px;
+    list-style: none;
 }
 
 /* event pop-up styling */
 #overlay {
     display: none;
-    position: absolute;
     justify-content: center;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
+    position: absolute;
+    width: 100%;
+    height: 100%;
     z-index: 5;
     background-color: hsla(0, 0%, 0%, 0.50);
 }
@@ -164,6 +224,7 @@ canvas {
 .popup-box {
     display: flex;
     position: fixed;
+    top: 200px;
     width: 400px;
     height: 500px;
     background-color: white;
@@ -172,16 +233,26 @@ canvas {
     padding: 10px;
 }
 
+.event-title {
+    display: flex;
+    justify-content: center;
+    font-size: 32px;
+    padding: 5px;
+    background-color: palevioletred;
+    border: 2px solid black;
+}
+
 .event-text {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    background-color: pink;
+    background-color: palevioletred;
     padding: 10px;
     height: 75%;
     border: 2px solid black;
     font-size: 24px;
     text-align: center;
+    white-space: pre-line;
 }
 
 .option-row {
@@ -191,34 +262,61 @@ canvas {
 }
 
 .accept-button {
-    display: flex;
+    display: inline-block;
     visibility: hidden;
     justify-content: center;
     align-items: center;
     height: 50px;
-    width: 100px;
-    font-size: 24px;
+    width: fit-content;
+    padding: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    background: linear-gradient(to bottom right, #39FF14, mediumseagreen);
+    transition: transform 1s ease, box-shadow 1s ease;
 }
 
 .acknowledge-button {
-    display: flex;
-    visibility: hidden;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-    width: 150px;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-.reject-button {
-    display: flex;
+    display: inline-block;
     visibility: hidden;
     justify-content: center;
     align-items: center;
     height: 50px;
     width: 100px;
     font-size: 24px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: transform 1s ease, box-shadow 1s ease;
+}
+
+.reject-button {
+    display: inline-block;
+    visibility: hidden;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: fit-content;
+    padding: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    background: linear-gradient(to bottom right, #FF3131, #ef4444);
+    transition: transform 1s ease, box-shadow 1s ease;
+}
+
+.accept-button:hover {
+    transform: scale(1.08);
+    box-shadow: 5px 5px 5px darkgreen;
+}
+
+.acknowledge-button:hover {
+    transform: scale(1.08);
+    box-shadow: 5px 5px 5px black;
+}
+
+.reject-button:hover {
+    transform: scale(1.08);
+    box-shadow: 5px 5px 5px darkred;
 }
 
 .show-btn {
@@ -306,7 +404,7 @@ canvas {
 .real-estate-img {
     z-index: 3;
     position: absolute;
-    width: 400px;
+    width: 200px;
     height: 400px;
     left: 50px;
     bottom: 210px;
@@ -318,7 +416,7 @@ canvas {
 .tech-img {
     z-index: 3;
     position: absolute;
-    width: 400px;
+    width: 200px;
     height: 400px;
     left: 200px;
     bottom: 180px;
@@ -345,4 +443,14 @@ canvas {
     font-family: 'Courier New', Courier, monospace;
     font-weight: 900;
     font-size: 18px;
+}
+
+.gain::before { 
+    content: "+ "; color: lime; 
+}
+.loss::before { 
+    content: "- "; color: red; 
+}
+.event::before { 
+    content: "• "; color: gold; 
 }
