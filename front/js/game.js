@@ -378,6 +378,11 @@ coin_img.src = "../assets/gold_coin.png";
 canvas.width = left_bg.clientWidth;
 canvas.height = left_bg.clientHeight;
 
+window.addEventListener("resize", () => {
+    canvas.width = left_bg.clientWidth;
+    canvas.height = left_bg.clientHeight;
+});
+
 //pop-up variables
 let is_pop_up_open = false;
 let last_pick = 0;
