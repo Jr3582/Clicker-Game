@@ -7,6 +7,7 @@ const net_worth_text = document.getElementById("net_worth_text");
 const property_text = document.getElementById("property_text")
 const money_per_sec_text = document.getElementById("money_per_sec");
 const total_minutes_played_text = document.getElementById("total_minutes_played");
+const wife_text = document.getElementById("wife_text");
 
 //left bg and canvas
 const left_bg = document.getElementById("left_game");
@@ -64,10 +65,21 @@ const moon_mps_text = document.getElementById("moon_mps");
 const event_title = document.getElementById("event_title");
 const overlay = document.getElementById("overlay");
 const event_text = document.getElementById("event_text");
-const exit_popup = document.getElementById("exit_popup");
 const accept_btn = document.getElementById("accept");
 const acknowledge_btn = document.getElementById("acknowledge");
 const reject_btn = document.getElementById("reject");
+
+const overlay2 = document.getElementById("overlay2");
+const event_title2 = document.getElementById("event_title2");
+const event_text2 = document.getElementById("event_text2");
+const accept_btn2 = document.getElementById("accept2");
+const acknowledge_btn2 = document.getElementById("acknowledge2");
+const reject_btn2 = document.getElementById("reject2");
+
+const overlay3 = document.getElementById("overlay3");
+const exit_gamble = document.getElementById("exit_gamble");
+const gamble = document.getElementById("gamble");
+const roulette_nums = document.getElementById("roulette_nums");
 
 //adding images
 const lemonade_img = document.getElementById("lemonade_img");
@@ -79,19 +91,32 @@ const real_estate_img = document.getElementById("real_estate_img");
 const tech_start_img = document.getElementById("tech_img");
 const hedge_fund_img = document.getElementById("hedge_fund_img");
 
+//gamble money btns
+const add_onek = document.getElementById("add_1k");
+const add_tenk = document.getElementById("add_10k");
+const add_hundredk = document.getElementById("add_100k");
+const add_million = document.getElementById("add_1m");
+
+const remove_onek = document.getElementById("remove_1k");
+const remove_tenk = document.getElementById("remove_10k");
+const remove_hundredk = document.getElementById("remove_100k");
+const remove_million = document.getElementById("remove_1m");
+
+const bet_amount_text = document.getElementById("bet_amount");
+
 //history
 const history = document.querySelector("#history");
 
 //cash & coins
-let cash = 10000000000;
+let cash = 10000000000000;
 const coins = [];
 
 //donation amount
 const donation_amount = Math.floor(Math.random() * (50000 - 10000) + 10000);
 
-//early event objects
+//early event objects for pop-ups
 const early_event_effects = [
-    { type: "cash", gain: "gain", history: "Found 100 dollars!",title:"Lucky Day!" ,mode: "flat", cash_effect: 100, target: "cash" ,description: "You found $100 on the ground while taking a stroll! (+100 cash)"},
+    { type: "cash", gain: "gain", history: "Found 100 dollars!", title:"Lucky Day!", mode: "flat", effect: 100, target: "cash" ,description: "You found $100 on the ground while taking a stroll! (+100 cash)"},
     { type: "choice",
         gain: "loss", 
         accept: {
@@ -99,7 +124,7 @@ const early_event_effects = [
             gain: "gain",
             history: "Sold your dog",
             accepted: true,
-            cash_effect: 500,
+            effect: 500,
             btn_text: "Sell your dog (+500)",
             target: "cash"
         },
@@ -108,13 +133,13 @@ const early_event_effects = [
             gain: "event",
             history: "Yelled at your dog for eating your money",
             accepted: false,
-            cash_effect: 0,
+            effect: 0,
             btn_text: "Reprimand your dog",
             target: "cash"
         },
-        history: "Your dog at some of your money!", title:"Dog Ate My Money" ,mode:"percent", cash_effect: -.01, target: "cash" ,description: "Your dog accidentally ate some of your money!! \n (-1% cash)", checker: "is_dog_sold"
+        history: "Your dog at some of your money!", title:"Dog Ate My Money" ,mode:"percent", effect: -.01, target: "cash" ,description: "Your dog accidentally ate some of your money!! \n (-1% cash)", checker: "is_dog_sold"
     },
-    { type: "boost", gain: "gain", history: "Lemonade stand promoted by TikTok influencer!", title:"TikTok Promotion!" ,mode:"flat", cash_effect: 5, duration: 60 * 1000 * 3 ,target: "lemon_MPS" ,description: "Your lemonade stand got featured on TikTok! \n (+5 cash generation for all lemonade stands! for 3 minutes!)"},
+    { type: "boost", gain: "gain", history: "Lemonade stand promoted by TikTok influencer!", title:"TikTok Promotion!" ,mode:"flat", effect: 5, duration: 60 * 1000 * 3 ,target: "lemon_MPS" ,description: "Your lemonade stand got featured on TikTok! \n (+5 cash generation for all lemonade stands! for 3 minutes!)"},
     { type: "choice", 
         gain: "loss",
         accept: {
@@ -122,7 +147,7 @@ const early_event_effects = [
             gain: "loss",
             history: "Bought extra security for your account!", 
             accepted: true, 
-            cash_effect: -10000, 
+            effect: -10000, 
             btn_text: "Pay 10K", 
             target:"cash"
         }, 
@@ -131,17 +156,17 @@ const early_event_effects = [
             gain: "event",
             history: "You do nothing about the security of your account.", 
             accepted: false,
-            cash_effect: 0, 
+            effect: 0, 
             btn_text: "That's too expensive!", 
             target:"cash"
         },
-        history: "Someone hacked in your account! And stole some of your money!", title:"Secuirty Alert" ,mode:"percent", cash_effect: -0.25, target: "cash" , description: "Someone stole your credit card info and went on a shopping spree! \n (-25% cash) \n \n Do you want to spend an additional 10k to secure your account?", checker: "is_account_secure"
+        history: "Someone hacked in your account! And stole some of your money!", title:"Secuirty Alert" ,mode:"percent", effect: -0.25, target: "cash" , description: "Someone stole your credit card info and went on a shopping spree! \n (-25% cash) \n \n Do you want to spend an additional 10k to secure your account?", checker: "is_account_secure"
     },
-    { type: "cash", gain: "gain", history:"You won a lucky scratch off!", title:"Lucky Scratch Off" ,mode:"flat", cash_effect: 1000, target: "cash" ,description: "You won a scratch off ticket! \n (+1000 cash)"},
-    { type: "cash", title:"Great Aunt Birgit", gain: "gain", history: "You got a great inheritence!" ,mode:"flat", cash_effect: 621552, target: "cash" ,description: "Your great Aunt Birgit passed away and you inherit her wealth! \n (+621,552 cash)", checker: "is_aunt_birgit_dead"},
-    { type: "boost", title:"A Bathroom Break", gain: "gain", history: "You're competitor went on a bathroom break!",mode:"percent", cash_effect: .2, duration: 60 * 1000 * 2 ,target: "food_MPS" ,description: "Your rival food truck competitor decided to go on a bathroom break \n (+20% income on all food trucks! For 2 minutes!"},
-    { type: "cash", title:"Lawsuit Settlement", gain: "loss", history: "You got sued for 5k",mode:"flat", cash_effect: -5000, target: "cash" ,description: "You accidentally spilled lemonade on a customer and get sued, you settle for 5K in damages \n (-5000 cash)"},
-    { type: "boost", title:"Organic Lemons!", gain: "gain", history: "Your organic lemons draw in customers!",mode:"percent", cash_effect: 0.05, duration: 60 * 1000 * 4 ,target: "lemon_MPS" ,description: "You switched to organic lemons. Customers are impressed! \n (+5% income on lemonade stands for 4 minutes!)"},
+    { type: "cash", gain: "gain", history:"You won a lucky scratch off!", title:"Lucky Scratch Off" ,mode:"flat", effect: 1000, target: "cash" ,description: "You won a scratch off ticket! \n (+1000 cash)"},
+    { type: "cash", title:"Great Aunt Birgit", gain: "gain", history: "You got a great inheritence!" ,mode:"flat", effect: 621552, target: "cash" ,description: "Your great Aunt Birgit passed away and you inherit her wealth! \n (+621,552 cash)", checker: "is_aunt_birgit_dead"},
+    { type: "boost", title:"A Bathroom Break", gain: "gain", history: "You're competitor went on a bathroom break!",mode:"percent", effect: .2, duration: 60 * 1000 * 2 ,target: "food_MPS" ,description: "Your rival food truck competitor decided to go on a bathroom break \n (+20% income on all food trucks! For 2 minutes!"},
+    { type: "cash", title:"Lawsuit Settlement", gain: "loss", history: "You got sued for 5k for spilling lemonade",mode:"flat", effect: -5000, target: "cash" ,description: "You accidentally spilled lemonade on a customer and get sued, you settle for 5K in damages \n (-5000 cash)"},
+    { type: "boost", title:"Organic Lemons!", gain: "gain", history: "Your organic lemons draw in customers!",mode:"percent", effect: 0.05, duration: 60 * 1000 * 4 ,target: "lemon_MPS" ,description: "You switched to organic lemons. Customers are impressed! \n (+5% income on lemonade stands for 4 minutes!)"},
     { type: "choice",
         gain : "loss",
         accept: {
@@ -149,7 +174,7 @@ const early_event_effects = [
             gain: "loss",
             history: "You paid someone to get rid of all the squirrels in the world",
             accepted: true, 
-            cash_effect: -1000, 
+            effect: -1000, 
             btn_text: "Yes, I hate squirrels!", 
             target:"cash"},
         reject: {
@@ -157,11 +182,11 @@ const early_event_effects = [
             gain: "event",
             history: "You continue to let the squirrels bully you",
             accepted: false, 
-            cash_effect: 0, 
+            effect: 0, 
             btn_text: "Keep, the squirrels!", 
             target: "cash"
         }, 
-        history:"A squirrel stole some of your money", title:"Sneaky Squirrel!" ,mode:"flat", cash_effect: -150, target: "cash" ,description: "A squirrel stole your tip jar! (-$150) \n \n Would you like to call the exterminator and have them exterminate all squirrels for 1K?", checker: "is_squirrel_exterminated"
+        history:"A squirrel stole some of your money", title:"Sneaky Squirrel!" ,mode:"flat", effect: -150, target: "cash" ,description: "A squirrel stole your tip jar! (-$150) \n \n Would you like to call the exterminator and have them exterminate all squirrels for 1K?", checker: "is_squirrel_exterminated"
     },
     { type: "choice",
         gain: "event",
@@ -170,7 +195,7 @@ const early_event_effects = [
             gain: "loss",
             history: "You donate some of your wealth to the hospital",
             accepted: true, 
-            cash_effect: (donation_amount) * -1, 
+            effect: (donation_amount) * -1, 
             btn_text: "Yes, I will donate!", 
             target:"cash"
         },
@@ -179,20 +204,20 @@ const early_event_effects = [
             gain: "event",
             history: "you don't donate your wealth to the hospital", 
             accepted: false, 
-            cash_effect: 0, 
+            effect: 0, 
             btn_text: "I won't donate", 
             target:"cash"
         }, 
-        history:"You're asked to make a small donatation to a hospital", title:"Small Donation", mode:"flat", cash_effect: 0, target:"cash", description: `A children hospital for cancer research is reaching out to you to see if you'll make a donation of $${donation_amount} \n \n would you like to donate?`, checker: "has_donated_to_hospital"
+        history:"You're asked to make a small donatation to a hospital", title:"Small Donation", mode:"flat", effect: 0, target:"cash", description: `A children hospital for cancer research is reaching out to you to see if you'll make a donation of $${donation_amount} \n \n would you like to donate?`, checker: "has_donated_to_hospital"
     },
     { type: "choice",
         gain: "event",
         accept: {
             mode: "flat",
             gain: "loss",
-            history: "You gave a homeless man 1,000, because you are nice :)",
+            history: "You gave a homeless man 1K, because you are nice :)",
             accepted: true,
-            cash_effect: -1000,
+            effect: -1000,
             btn_text: "Give the man money",
             target:"cash"
         },
@@ -201,7 +226,7 @@ const early_event_effects = [
             gain: "event",
             history: "You spit in a homeless man face because you are mean :(",
             accepted: false,
-            cash_effect: 0,
+            effect: 0,
             btn_text: "Spit in his face and leave",
             target: "cash"
         },
@@ -209,7 +234,7 @@ const early_event_effects = [
             mode: "flat",
             gain: "gain",
             history: "The homeless man rewards your generosity and gives you $100,000",
-            cash_effect: 100000,
+            effect: 100000,
             accepted: true,
             title:"Good Karma!",
             description: "The homeless man was actually a secret trillionaire and was testing your kindness! He returns 100K back to you as a gesture of kindness! (+100K Cash)",
@@ -217,24 +242,180 @@ const early_event_effects = [
             target: "cash"
         },
         bad_follow_up: {
-            mod: "flat",
+            mode: "flat",
             gain: "loss",
             history: "The homeless man crushes your house and steals your money",
-            cash_effect: -1000000,
+            effect: -1000000,
             accepted: false,
             title: "Bad Karma",
             description: "The homeless man turns out to be a magic wizard and summons a meteor on top of your house and crushes it, he also steals a lot of your money. (-1M Cash)",
             checker: "recieved_reward",
             target: "cash"
         },
-        history: "You were asked to make a small donation from a homeless man", title:"Donation To The Homeless", mode:"flat", cash_effect: 0, description: "A homeless man comes up to you and asks you for some money \n \n Do you want to make a small donation? \n (-1K Cash)", checker: "donated_to_homeless", has_follow_up: true, follow_up_delay: 10 * 1000, checker: "donated_to_homeless"
+        history: "You were asked to make a small donation from a homeless man", title:"Donation To The Homeless", mode:"flat", effect: 0, description: "A homeless man comes up to you and asks you for some money \n \n Do you want to make a small donation? \n (-1K Cash)", checker: "donated_to_homeless", has_follow_up: true, follow_up_delay: 10 * 1000
     }
 ]
 
 const mid_event_effects = [
-    { type: "boost", title:"TikTok Promotion!" ,mode:"flat", cash_effect: 5, duration: 60 * 1000 * 3 ,target: "lemon_MPS" ,description: "Your lemonade stand got featured on TikTok! \n (+5 cash generation for all lemonade stands! for 3 minutes!)"},
+    { type: "cash", gain: "gain", history: "The government gave you a subsidy of (+ 250K)!",title:"Government Subsidy", mode:"flat", effect: 250000, target: "cash", description: "The city awards your company a mid-size business expansion grant \n \n(+ $250K)"},
+    { type: "cash", gain: "loss", history: "The equipment at one of your properties malfunctions! (- 180K)", title:"Equipment Malfunction", mode:"flat", effect: -180000, target: "cash", description: "One of your production facilities suffers critical equipment failures \n \n (- $180K)"},
+    { type: "choice", gain: "event", 
+        accept: {
+            mode: "flat",
+            gain: "loss",
+            history: "You give the worker a 25K raise!",
+            accepted: true,
+            effect: -25000,
+            btn_text: "Give a bonus",
+            target: "cash"
+        },
+        reject: {
+            mode: "flat",
+            gain: "event",
+            history: "You laugh in the worker face refuses his demands",
+            accepted: false,
+            effect: 0,
+            btn_text: "Don't give bonus",
+            target: "cash"
+        },
+        good_follow_up: {
+            type: "boost",
+            mode: "percent",
+            gain: "gain",
+            history: "+50% income on all restaurants",
+            effect: 0.50,
+            accepted: true,
+            title: "A Happy Worker",
+            duration: 60 * 1000 * 5,
+            description: "The worker feels vindicated and works harder than ever before! \n \n(+ 50% income on all restaurants! for 5 minutes)",
+            checker: "happy_worker",
+            target: "restaurant_MPS"
+        },
+        bad_follow_up: {
+            type: "boost",
+            mode: "percent",
+            gain: "loss",
+            history: "-50% income on all restaurants!",
+            effect: -0.50,
+            accepted: false,
+            title: "Unhappy Worker",
+            duration: 60 * 1000 * 5,
+            description: "The worker is left unsatisfied and leaves, your restaurants becomes much less efficient without him! \n \n (-50% income on all restaurants! for 5 minutes)",
+            checker: "happy_worker",
+            target: "restaurant_MPS"
+        },
+        history: "Your top worker demands a raise!", title:"Worker Demands", mode:"percent", effect: 0, target: "cash", description: "Your top worker at your restaurant demands a 25K bonus or else he will leave!", checker: "has_given_worker_bonus", has_follow_up: true, follow_up_delay: 10 * 1000
+    },
+    { type: "cash", gain: "loss", history: "You've been audited for miscalculated taxes.", title:"Tax Audit", mode:"flat", effect: -275000, target: "cash", description: "You've been audited and owe previously miscalculated taxes of 275K \n \n (- $275K)"},
+    { type: "boost", gain: "gain", history: "Mark Zuckerberg endorses your tech startup.", title:"Mark Zuckerberg", mode:"percent", effect: .10,  duration: 60 * 1000 * 3, target: "tech_MPS", description: "Mark Zuckerberg endorses your tech start up! \n \n (+ 10% income to all tech startups for 3 minutes)"},
+    { type: "choice", gain: "event", 
+        accept: {
+            mode: "flat",
+            gain: "loss",
+            history: "You give the magical crypto wizard 1M dollars",
+            accepted: true,
+            effect: -1000000,
+            btn_text: "Give the man 1M",
+            target: "cash"
+        },
+        reject: {
+            mode: "flat",
+            gain: "event",
+            history: "You don't give the wizard 1 million dollars",
+            accepted: true,
+            effect: 0,
+            btn_text: "You pass on his offer",
+            target: "cash",
+        },
+        good_follow_up: {
+            mode: "flat",
+            gain: "loss",
+            history: "You got scammed by a magical wizard",
+            effect: 0,
+            accepted: true,
+            title: "You Got Scammed",
+            description: "The wizard turned out to be a professional con artist! He steals your money and you never see him again.",
+            checker: "got_scammed",
+            target: "cash"
+        },
+        bad_follow_up: {
+            mode: "flat",
+            gain: "event",
+            history: "A bunch of investors got scammed by a magical crypto wizard!",
+            effect: 0,
+            accepted: true,
+            title: "Break News!",
+            description: "You see on the news that multiple investors got scammed by magical crypto wizard, these people will most likely never see their money ever again!",
+            checker: "got_scammed",
+            target: "cash"
+        },
+        history: "Mysterious crypto wizard appraoches you.", title:"Magic Crypto Wizard", mode:"flat", effect: 0, target: "cash", description: "A magical crypto wizard approaches you and says he can multiply your money if you give him a portion of your small fortune.", checker: "give_to_crypto_wizard", has_follow_up: true, follow_up_delay: 10 * 1000
+    },
+    { type: "cash", gain: "loss", history: "You rebrand the company logo to a worse logo!", title:"Logo rebrand", mode:"flat", effect: -250000, target: "cash", description: "You decided to rebrand the company logo into something much worse and less unrecognizeable \n \n (- $250K)"},
+    { type: "cash", gain: "gain", history: "The price of bitcoin sky rockets!!", title:"Bitcoin Price Skyrockets!", mode:"flat", effect: 1000000, target: "cash", description:"The price of your bitcoin skyrockets! \n \n (+ $1M)"},
+    { type: "cash", gain: "loss", history: "A intern deletes your whole database and the backups! You spend 500K to try and recover everything!", title:"Intern Incompetence", mode:"flat", effect: -500000, target: "cash", description: "Your newly hired intern deletes the entire production database and it's back-ups, and you spend $500K to try and recover everything! \n \n (- $500K)"},
+    { type: "cash", gain: "loss", history: "A customer sues you!", title:"Minor Lawsuit", mode:"flat", effect: -120000, target: "cash", description: "A customer claims your product is 'emotionally damaging' them and he sues you for $120K \n \n (- $120K)"},
+    { type: "cash", gain: "gain", history: "One of your post starts trending!", title:"Social Media Surge", mode:"flat", effect: 250000, target: "cash", description: "One of your posts trends for no clear reason! \n \n (- $250K)"},
+    { type: "cash", gain: "gain", history: "You land a short-term sponsorship deal with another company!", title:"Corporate Sponsorship", mode:"flat", effect: 275000, target: "cash", description: "You landed a short-term sponsorship deal with another company \n \n (+ $275K)"},
+    { type: "cash", gain: "loss", history: "Your dog takes revenge on you!", title:"Doggie Revenge!", mode:"percent", effect: -.1, target: "cash", description: "The dog you sold earlier came back for revenge and eats 10% of your wealth! \n \n (- 10% Cash)"}, 
 ]
 
+const late_event_effects = [
+    { type: "cash", gain: "event", 
+        accept: {
+            mode: "flat",
+            gain: "loss",
+            history: "You hire a Saul Goodman to fight your case!",
+            accepted: true,
+            effect: -2000000,
+            btn_text: "Hire a lawyer",
+            target: "cash"
+        },
+        reject: {
+            mode: "flat",
+            gain: "event",
+            history: "You do nothing about the IRS",
+            accepted: false,
+            effect: 0,
+            btn_text: "Do nothing",
+            target: "cash"
+        },
+        good_follow_up: {
+            mode: "percent",
+            gain: "event",
+            history: "Saul Goodman worked his magic and you only lose 5% of your cash",
+            effect: -0.05,
+            accepted: true,
+            title: "IRS Audit Update",
+            description: "Saul Goodman worked his magic and you only lose 5% of your total cash!",
+            checker: "audit_fined",
+            target: "cash"
+        },
+        bad_follow_up: {
+            mode: "percent",
+            gain: "event",
+            history: "You have no one to defend you and the IRS fine you for 25% of your total cash!",
+            effect: -0.25,
+            accepted: false,
+            title: "IRS Audit Update",
+            description: "With no one to defend your case, the IRS, finds you guilty of fraud and you lose 25% of your total cash",
+            checker: "audit_fined",
+            target: "cash"
+        },
+        history: "The IRS takes a audit of your companies and properties and finds out you've been doing fraud!", title:"IRS Audit From Hell", mode:"flat", effect: 0, target: "cash", description: "The IRS audits all your companies and discovers you've been commiting some fraud!", checker: "irs_audit", has_follow_up: true, follow_up_delay: 10 * 1000
+    }, 
+    { type: "boost", gain: "loss", history: "A small meteor hit the dome of your moon colony and some of the air escapes", title:"Hull Breach!", mode:"percent", effect: -.1, duration: 60 * 1000 * 3, target: "moon_MPS", description: "You lose 10% on your moon colonies for 3 minutes!"}, 
+    { type: "cash", gain: "gain", history: "You find a underground crypto vault!", title:"Crypto Vault", mode:"flat", effect: 100000000, target: "cash", description: "You find a underground crypto vault full of flash drives with Bitcoin!\n \n (+ $100M)"}, 
+    { type: "cash", gain: "gain", history: "The united government gives you more subsidies!", title:"Government Subsidy", mode:"flat", effect: 50000000, target: "cash", description: "The government gives you more subsidies!\n \n (+ $50M)"}, 
+    { type: "boost", gain: "gain", history: "The lemonade cartel endorses you!", title:"Lemonade Cartel", mode:"percent", effect: 10, target: "lemon_MPS",  duration: 60 * 1000 * 3, description: "The Don from the Lemonade Cartel endorses your lemonade recipe, everybody flocks to your lemonade stands! \n \n (+ 1000% for 3 minutes!)"}, 
+]
+
+const wife_events = [
+    { type: "wife", type2: "cash", gain: "loss", history: "Your wife takes your credit card and charges 20K on it!", title:"Sneaky Wife", happiness: 20, mode:"flat", effect: -20000, target: "cash", target2: "wife_happiness", description: "Your wife takes your wallet while you weren't looking and takes your credit card and went on a shopping spree!\n \n (- $20K)"},
+    { type: "wife", type2: "cash", gain: "loss", history: "Your wife breaks her nail!", title:"Broken Nail", happiness: -10, mode:"flat", effect: 0, target: "cash", target2: "wife_happiness", description: "Your wife breaks a nail and blames you for it for some reason!\n \n (-10 happiness)"},
+    { type: "wife", type2: "cash", gain: "event", history: "You celebrate your anniversary with your wife!", title:"Anniversary Reminder", happiness: 10, mode:"flat", effect: -5000, target: "cash", target2: "wife_happiness", description: "You buy your wife a big shiny ring for her anniversary gift. \n \n (+10 happiness)"},
+    { type: "wife", type2: "cash", gain: "loss", history: "You argue with your wife about something stupid.", title:"Major Argument", happiness: -10, mode:"flat", effect: 0, target: "cash", target2: "wife_happiness", description: "You argue with your wife about which came first the egg or the chicken. \n \n (-10 happiness)"},
+]
 const early_game_event_objects = {
     get cash() {return cash; },
     set cash(value) { cash = value; },
@@ -267,7 +448,47 @@ const early_game_event_objects = {
     set recieved_reward(value) {recieved_reward = value},
 }
 
-// early game pop ups
+const mid_game_event_objects = {
+    get cash() {return cash},
+    set cash(value) { cash = value},
+
+    get restaurant_MPS() {return restaurant_MPS},
+    set restaurant_MPS(value) {return restaurant_MPS = value},
+
+    get tech_MPS() {return tech_MPS},
+    set tech_MPS(value) {return tech_MPS = value},
+
+    get happy_worker() {return happy_worker},
+    set happy_worker(value) {return happy_worker = value},
+
+    get has_given_worker_bonus() {return has_given_worker_bonus},
+    set has_given_worker_bonus(value) {return has_given_worker_bonus = value},
+
+    get got_scammed() {return got_scammed},
+    set got_scammed(value) {return got_scammed = value},
+
+    get give_to_crypto_wizard() {return give_to_crypto_wizard},
+    set give_to_crypto_wizard(value) {return give_to_crypto_wizard = value},
+}
+
+const late_game_event_objects = {
+    get cash() {return cash},
+    set cash(value) { cash = value},
+
+    get lemon_MPS() {return lemon_MPS; },
+    set lemon_MPS(value) { lemon_MPS = value; },
+
+    get irs_audit() {return irs_audit},
+    set irs_audit(value) { irs_audit = value},
+
+    get audit_fined() {return audit_fined},
+    set audit_fined(value) { audit_fined = value}
+}
+
+const wife_game_event_objects = {
+    get cash() {return cash},
+    set cash(value) { cash = value},
+}
 
 //property numbers
 let lemonade = 0;
@@ -383,10 +604,12 @@ window.addEventListener("resize", () => {
     canvas.height = left_bg.clientHeight;
 });
 
-//pop-up variables
+//active boosts
+let active_boots = {};
+
+//early game variables
 let is_pop_up_open = false;
 let last_pick = 0;
-let active_boots = {};
 let is_account_secure = false;
 let is_aunt_birgit_dead = false;
 let is_squirrel_exterminated = false;
@@ -395,218 +618,226 @@ let is_dog_sold = false;
 let donated_to_homeless = false;
 let recieved_reward = false;
 
+//mid game events
+let happy_worker = false;
+let has_given_worker_bonus = false;
+let got_scammed = false;
+let give_to_crypto_wizard = false;
+
+//late game events
+let irs_audit = false;
+let audit_fined = false;
+
+//wife variables
+let wife_happiness = 100;
+let divorced = false;
+let buy_house = false;
+let happy_wife = false;
+let wife = 1;
+
+//event queue
+let event_queue = [];
+let static_events_queue = [];
+
+//history to load later
+const history_stack = [];
+
+//milestone variables
+let one = false;
+let one_thousand = false;
+let one_hundred_thou = false;
+let one_mil = false;
+let one_hundred_mil = false;
+let one_bil = false;
+let one_hundred_bil = false;
+let one_tril = false;
+let mz_milestone = false;
+let em_milestone = false;
+
+//gambling variables
+let bet_amount = 0;
+let total_money_won = 0;
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~ ticker for everything ~~~~~~~~~~~~~~~~~~~~~~~~
+// const everything_ticker = setInterval(() => {
+//     money_ticker();
+//     milestone_funt();
+//     update_play_funct();
+// }, 1000)
+
+// const process_next_queue = setInterval(() => {
+//     if(static_events_queue.length >= 1) {
+//         process_next_static_event();
+//     }
+
+//     if(event_queue.length >= 1) {
+//         process_next_event();
+//     }
+// }, 30 * 1000);
+
+//~~~~~~~~~~~~~~~~~~~~~~~~ save functionality ~~~~~~~~~~~~~~~~~~~~~~~~
+// const save_game = setInterval(() => {
+//     const session_time = Date.now() - start_time;
+//     total_play_time += session_time;
+//     localStorage.setItem("save_state", JSON.stringify(get_game_state()));
+//     add_history("!!!GAME IS AUTO SAVING!!!", "event");
+// }, 5 * 60 * 1000)
+
 //~~~~~~~~~~~~~~~~~~~~~~~~ beginning random events ~~~~~~~~~~~~~~~~~~~~~~~~
-const pop_up_events = randomInterval(() => {
-    let random_event;
-    let event;
-    let attempts = 0;
+// const pop_up_events = randomInterval(() => {
+//     //early game events
+//     if(!is_pop_up_open && cash <= 100000000) {
+//         event_queue.push(() => {
+//             execute_event(early_event_effects, early_game_event_objects, "lemon_MPS", "food_MPS", lemonade, food);
+//         })
+//     }
+
+//     //mid game events
+//     if(!is_pop_up_open && (cash <= 100000000000 || cash > 100000000)) {
+//         event_queue.push(() => {
+//             execute_event(mid_event_effects, mid_game_event_objects, "restaurant_MPS", "tech_MPS", restaurant, tech);
+//         })
+//     }
+
+//     //late game events
+//     if(!is_pop_up_open && cash > 100000000000) {
+//         event_queue.push(() => {
+//             execute_event(mid_event_effects, mid_game_event_objects, "moon_MPS", "lemon_MPS", moon, lemonade);
+//         })
+//     }
+
+//     process_next_event();
+//     update_all_text();
+//     update_stats_UI();
+// }, 2 * 60 * 1000, 5 * 60 * 1000);
+
+//~~~~~~~~~~~~~~~~~~~~~~~~ wife events ~~~~~~~~~~~~~~~~~~~~~~~~
+// const wife_pop_up_events = randomInterval(() => {
+//     if(!is_pop_up_open && cash >= 100000) {
+//         event_queue.push(() => {
+//             execute_event(early_event_effects, early_game_event_objects, "lemon_MPS", "food_MPS", lemonade, food);
+//         })
+//     }
+
+//     process_next_event();
+//     update_all_text();
+//     update_stats_UI();
+// },  5 * 60 * 1000, 8 * 60 * 1000);
+
+//~~~~~~~~~~~~~~~~~~~~~~~~ wife happiness ticker ~~~~~~~~~~~~~~~~~~~~~~~~
+// const wife_happiness_ticker = setInterval(() => {
+//     if(wife !== 0) {
+//         wife_happiness -= 0.05;
+//     }
+
+//     if(wife_happiness >= 100) {
+//         wife_happiness = 100;
+//     }
     
-    do {
-        random_event = Math.floor(Math.random() * early_event_effects.length);
-        event = early_event_effects[random_event];
-        attempts++;
-    } while (
-        attempts < 50 && (
-        random_event === last_pick ||
-        (event.type === "boost" && active_boots[event.target]) ||
-        (event.checker && early_game_event_objects[event.checker]) ||
-        is_pop_up_open
-        )
-    );
-
-    if(!is_pop_up_open && get_total_minutes(current_total) <= 15) {
-        if(event.type === "boost") {
-            active_boots[event.target] = true;
-
-            let original_value = early_game_event_objects[event.target];
-
-            apply_event_effect(event, early_game_event_objects);
-
-            setTimeout(() => {
-                active_boots[event.target] = false;
-                early_game_event_objects[event.target] = original_value;
-            }, event.duration);
-
-            last_pick = random_event;
-            add_history(event.history, event.gain);
-            pop_up_acknowledge(event, event.gain);
-            update_all_text();
-        }
+//     if(wife_happiness <= 0 && wife === 1) {
+//         overlay2.classList.remove("hidden");
+//         overlay2.classList.add("show");
         
-        if(event.type === "cash") {
-            if(event.checker === "is_aunt_birgit_dead"){ early_game_event_objects[event.checker] = true };
-            last_pick = random_event;
-            add_history(event.history, event.gain);
-            apply_event_effect(event, early_game_event_objects);
-            pop_up_acknowledge(event, event.gain);
-        }
-        
-        if(event.type === "choice") {
-            add_history(event.history, event.gain);
-            last_pick = random_event;
-            show_choice_events(event, early_game_event_objects[event.checker]);
-        }
-    }
-    update_UI();
-}, 90 * 1000, 150 * 1000);
+//         accept_btn2.classList.remove("show-btn")
+//         reject_btn2.classList.remove("show-btn");
+//         reject_btn2.textContent = "";
+//         accept_btn2.textContent = "";
 
-//~~~~~~~~~~~~~~~~~~~~~~~~ update play time ~~~~~~~~~~~~~~~~~~~~~~~~
-const update_save = setInterval(() => {
-    total_play_time = 0;
-    total_minutes_played_text.textContent = get_total_minutes(current_total);
-}, 1000);
+//         acknowledge_btn2.textContent = "T.T";
+//         acknowledge_btn2.classList.add("show-btn");
+//         is_pop_up_open = true;
+
+//         event_title2.textContent = "Divorce";
+//         event_text2.textContent = "Your wife is fed up with you and decided to devorce you! She takes half of your money and properties! And leaves you! (-50% cash)";
+
+//         wife = 0;
+//         cash = (Math.round((cash / 2) / 100) * 100);
+//         lemonade = Math.floor(lemonade / 2);
+//         food = Math.floor(food / 2);
+//         store = Math.floor(store / 2);
+//         restaurant = Math.floor(restaurant / 2);
+//         apartment = Math.floor(apartment / 2);
+//         real_estate = Math.floor(real_estate / 2);
+//         tech = Math.floor(tech / 2);
+//         hedge = Math.floor(hedge / 2);
+//         mine = Math.floor(mine / 2);
+//         moon = Math.floor(moon / 2);
+//     }
+//     update_stats_UI();
+// }, 30 * 1000);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~ yearly taxes every 10 minutes ~~~~~~~~~~~~~~~~~~~~~~~~
-const taxes = setInterval(() => {
-    let owe_to_irs = "";
-    if(cash <= 100000) {
-        owe_to_irs = abbreviate(cash * 0.20);
-        cash *= 0.80;
-    } else if (cash <= 100000000) {
-        owe_to_irs = abbreviate(cash * 0.10);
-        cash *= 0.90;
-    } else if (cash <= 100000000000) {
-        owe_to_irs = abbreviate(cash * 0.05);
-        cash *= 0.95;
-    } else {
-        owe_to_irs = abbreviate(cash * 0.01);
-        cash *= 0.99;
-    }
-    overlay_for_taxes(owe_to_irs);
-    update_UI();
-},10 * 60 * 1000);
+// const taxes = setInterval(() => {
+//     let owe_to_irs = "";
+//     if(cash <= 100000) {
+//         owe_to_irs = abbreviate(cash * 0.20);
+//         cash *= 0.80;
+//     } else if (cash <= 100000000) {
+//         owe_to_irs = abbreviate(cash * 0.10);
+//         cash *= 0.90;
+//     } else if (cash <= 100000000000) {
+//         owe_to_irs = abbreviate(cash * 0.05);
+//         cash *= 0.95;
+//     } else {
+//         owe_to_irs = abbreviate(cash * 0.01);
+//         cash *= 0.99;
+//     }
+//     static_events_queue.push(() => {
+//         overlay_for_taxes(owe_to_irs);
+//     })
+//     process_next_static_event();
+//     update_stats_UI();
+// },10 * 60 * 1000);
 
-//~~~~~~~~~~~~~~~~~~~~~~~~ money tickers ~~~~~~~~~~~~~~~~~~~~~~~~
-const lemondate_ticker = setInterval(() => {
-    if(lemonade > 0) {
-        cash += lemon_MPS * lemonade;
-        const spawn_target = lemonade;
-        for(let i = 0; i < spawn_target; i++) {
-            if(!check_coin_num()) break;
-            auto_gen_coin();
-        }
-        money_text.textContent = abbreviate(cash);
-    }
-    update_img(lemonade, lemonade_img, "lemonade-img");
-}, 1000);
+//~~~~~~~~~~~~~~~~~~~~~~~~ add and remove gambling money ~~~~~~~~~~~~~~~~~~~~~~~~
 
-const food_ticker = setInterval(() => {
-    if(food > 0) {
-        cash += food_MPS * food;
-        const spawn_target = food_MPS * food;
-        for(let i = 0; i < spawn_target; i++) {
-            if(!check_coin_num()) break;
-            auto_gen_coin();
-        }
-        money_text.textContent = abbreviate(cash);
-    }
-    update_img(food, food_img, "food-img");
-}, 1000);
+//add money to bet
+add_onek.addEventListener("click", () => {
+    bet_amount += 1000;
+    if(bet_amount > 100000000) {bet_amount = 100000000;}
+    bet_amount_text_change();
+})
 
-const store_ticker = setInterval(() => {
-    if(store > 0) {
-        cash += store_MPS * store;
-        const spawn_target = store_MPS * store;
-        for(let i = 0; i < spawn_target; i++) {
-            if(!check_coin_num()) break;
-            auto_gen_coin();
-        }
-        money_text.textContent = abbreviate(cash);
-    }
-    update_img(store, store_img, "store-img");
-}, 1000);
+add_tenk.addEventListener("click", () => {
+    bet_amount += 10000;
+    if(bet_amount > 100000000) {bet_amount = 100000000;}
+    bet_amount_text_change();
+})
+add_hundredk.addEventListener("click", () => {
+    bet_amount += 100000;
+    if(bet_amount > 100000000) {bet_amount = 100000000;}
+    bet_amount_text_change();
+})
+add_million.addEventListener("click", () => {
+    bet_amount += 10000000;
+    if(bet_amount > 100000000) {bet_amount = 100000000;}
+    bet_amount_text_change();
+})
+
+//remove money from bet
+remove_onek.addEventListener("click", () => {
+    bet_amount -= 1000;
+    if(bet_amount < 0) {bet_amount = 0;}
+    bet_amount_text_change();
+})
+remove_tenk.addEventListener("click", () => {
+    bet_amount -= 10000;
+    if(bet_amount < 0) {bet_amount = 0;}
+    bet_amount_text_change();
+})
+remove_hundredk.addEventListener("click", () => {
+    bet_amount -= 100000;
+    if(bet_amount < 0) {bet_amount = 0;}
+    bet_amount_text_change();
+})
+remove_million.addEventListener("click", () => {
+    bet_amount -= 10000000;
+    if(bet_amount < 0) {bet_amount = 0;}
+    bet_amount_text_change();
+})
 
 
-const restaurant_ticker = setInterval(() => {
-    if(restaurant > 0) {
-        cash += restaurant_MPS * restaurant;
-        const spawn_target = restaurant_MPS * restaurant;
-        for(let i = 0; i < spawn_target; i++) {
-            if(!check_coin_num()) break;
-            auto_gen_coin();
-        }
-        money_text.textContent = abbreviate(cash);
-    }
-    update_img(restaurant, restaurant_img, "restaurant-img");
-}, 1000);
-
-const apartment_ticker = setInterval(() => {
-    if(apartment > 0) {
-        cash += apartment_MPS * apartment;
-        const spawn_target = apartment_MPS * apartment;
-        for(let i = 0; i < spawn_target; i++) {
-            if(!check_coin_num()) break;
-            auto_gen_coin();
-        }
-        money_text.textContent = abbreviate(cash);
-    }
-    update_img(apartment, apartment_img, "apartment-img");
-}, 1000);
-
-const real_estate_ticker = setInterval(() => {
-    if(real_estate > 0) {
-        cash += real_estate_MPS * real_estate;
-        const spawn_target = real_estate_MPS * real_estate;
-        for(let i = 0; i < spawn_target; i++) {
-            if(!check_coin_num()) break;
-            auto_gen_coin();
-        }
-        money_text.textContent = abbreviate(cash);
-    }
-    update_img(real_estate, real_estate_img, "real-estate-img");
-}, 1000);
-
-const tech_ticker = setInterval(() => {
-    if(tech > 0) {
-        cash += tech_MPS * tech;
-        const spawn_target = tech_MPS * tech;
-        for(let i = 0; i < spawn_target; i++) {
-            if(!check_coin_num()) break;
-            auto_gen_coin();
-        }
-        money_text.textContent = abbreviate(cash);
-    }
-    update_img(tech, tech_start_img, "tech-img");
-}, 1000);
-
-const hedge_fund_ticker = setInterval(() => {
-    if(hedge > 0) {
-        cash += hedge_MPS * hedge;
-        const spawn_target = hedge_MPS * hedge;
-        for(let i = 0; i < spawn_target; i++) {
-            if(!check_coin_num()) break;
-            auto_gen_coin();
-        }
-        money_text.textContent = abbreviate(cash);
-    }
-    update_img(hedge, hedge_fund_img, "hedge-fund-img");
-}, 1000);
-
-const space_mine_ticker = setInterval(() => {
-    if(mine > 0) {
-        cash +=  mine_MPS * mine;
-        const spawn_target = mine_MPS * mine;
-        for(let i = 0; i < spawn_target; i++) {
-            if(!check_coin_num()) break;
-            auto_gen_coin();
-        }
-        money_text.textContent = abbreviate(cash);
-    }
-    update_bg();
-}, 1000);
-
-const moon_ticker = setInterval(() => {
-    if(moon > 0) {
-        cash +=  moon_MPS * moon;
-        const spawn_target = moon_MPS * moon;
-        for(let i = 0; i < spawn_target; i++) {
-            if(!check_coin_num()) break;
-            auto_gen_coin();
-        }
-        money_text.textContent = abbreviate(cash);
-    }
-    update_bg();
-}, 1000);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~ buy listeners ~~~~~~~~~~~~~~~~~~~~~~~~
 buy_lemonade.addEventListener("click", () => {
@@ -620,7 +851,9 @@ buy_lemonade.addEventListener("click", () => {
             fifty_lemonades = true;
             lemon_MPS *= 2;
             money_per_sec *= 2;
-            double_money_pop_up("lemonade stands");
+            static_events_queue.push(() => {
+                double_money_pop_up("lemonade stands");
+            })
             update_MPS_text(lemonade_mps_text, lemon_MPS);
         }
 
@@ -646,7 +879,7 @@ buy_lemonade.addEventListener("click", () => {
         buy_lemonade.textContent = "Buy for $" + abbreviate(buy_lemonade_price);
         sell_lemonade.textContent = "Sell for $" + abbreviate(sell_lemonade_price);
         lemonade_mps_text.textContent = lemon_MPS;
-        update_UI();
+        update_stats_UI();
     }
 })
 buy_food.addEventListener("click", () => {
@@ -659,7 +892,9 @@ buy_food.addEventListener("click", () => {
             fifty_foods = true;
             food_MPS *= 2;
             money_per_sec *= 2;
-            double_money_pop_up("food trucks");
+            static_events_queue.push(() => {
+                double_money_pop_up("food trucks");
+            })
             update_MPS_text(food_mps_text, food_MPS);
         }
 
@@ -685,7 +920,7 @@ buy_food.addEventListener("click", () => {
         buy_food.textContent = "Buy for $" + abbreviate(buy_food_price);
         sell_food.textContent = "Sell for $" + abbreviate(sell_food_price);
         food_mps_text.textContent = food_MPS;
-        update_UI();
+        update_stats_UI();
     }
 })
 buy_store.addEventListener("click", () => {
@@ -698,7 +933,10 @@ buy_store.addEventListener("click", () => {
             fifty_stores = true;
             store_MPS *= 2;
             money_per_sec *= 2;
-            double_money_pop_up("grocery stores");
+            static_events_queue.push(() => {
+                double_money_pop_up("grocery stores");
+            })
+
             update_MPS_text(store_mps_text, store_MPS);
         }
 
@@ -723,7 +961,7 @@ buy_store.addEventListener("click", () => {
         buy_store.textContent = "Buy for $" + abbreviate(buy_store_price);
         sell_store.textContent = "Sell for $" + abbreviate(sell_store_price);
         store_mps_text.textContent = store_MPS;
-        update_UI();
+        update_stats_UI();
     }
 })
 buy_restaurant.addEventListener("click", () => {
@@ -736,7 +974,9 @@ buy_restaurant.addEventListener("click", () => {
             fifty_restaurants = true;
             restaurant_MPS *= 2;
             money_per_sec *= 2;
-            double_money_pop_up("restaurants");
+            static_events_queue.push(() => {
+                double_money_pop_up("restaurants");
+            })
             update_MPS_text(restaurant_mps_text, restaurant_MPS);
         }
 
@@ -760,8 +1000,8 @@ buy_restaurant.addEventListener("click", () => {
         restaurants.textContent = restaurant;
         buy_restaurant.textContent = "Buy for $" + abbreviate(buy_restaurant_price);
         sell_restaurant.textContent = "Sell for $" + abbreviate(sell_restaurant_price);
-        restaurant_mps_text.textContent = real_estate_MPS;
-        update_UI();
+        restaurant_mps_text.textContent = restaurant_MPS;
+        update_stats_UI();
     }
 })
 buy_apartment.addEventListener("click", () => {
@@ -774,7 +1014,9 @@ buy_apartment.addEventListener("click", () => {
             fifty_apartments = true;
             apartment_MPS *= 2;
             money_per_sec *= 2;
-            double_money_pop_up("apartment complexes");
+            static_events_queue.push(() => {
+                double_money_pop_up("apartment complexes");
+            })
             update_MPS_text(apartment_mps_text, apartment_MPS);
         }
 
@@ -799,7 +1041,7 @@ buy_apartment.addEventListener("click", () => {
         buy_apartment.textContent = "Buy for $" + abbreviate(buy_apartment_price);
         sell_apartment.textContent = "Sell for $" + abbreviate(sell_apartment_price);
         apartment_mps_text.textContent = apartment_MPS;
-        update_UI();
+        update_stats_UI();
     }
 })
 buy_real_estate.addEventListener("click", () => {
@@ -812,7 +1054,9 @@ buy_real_estate.addEventListener("click", () => {
             fifty_real_estates = true;
             real_estate_MPS *= 2;
             money_per_sec *= 2;
-            double_money_pop_up("real estate properties");
+            static_events_queue.push(() => {
+                double_money_pop_up("real estate properties");
+            })
             update_MPS_text(real_estate_mps_text, real_estate_MPS);
         }
 
@@ -837,7 +1081,7 @@ buy_real_estate.addEventListener("click", () => {
         buy_real_estate.textContent = "Buy for $" + abbreviate(buy_real_estate_price);
         sell_real_estate.textContent = "Sell for $" + abbreviate(sell_real_estate_price);
         real_estate_mps_text.textContent = real_estate_MPS;
-        update_UI();
+        update_stats_UI();
     }
 })
 buy_tech.addEventListener("click", () => {
@@ -850,7 +1094,9 @@ buy_tech.addEventListener("click", () => {
             fifty_techs = true;
             tech_MPS *= 2;
             money_per_sec *= 2;
-            double_money_pop_up("tech startups");
+            static_events_queue.push(() => {
+                double_money_pop_up("tech startups");
+            })
             update_MPS_text(tech_mps_text, tech_MPS);
         }
 
@@ -876,7 +1122,7 @@ buy_tech.addEventListener("click", () => {
         buy_tech.textContent = "Buy for $" + abbreviate(buy_tech_price);
         sell_tech.textContent = "Sell for $" + abbreviate(sell_tech_price);
         tech_mps_text.textContent = tech_MPS;
-        update_UI();
+        update_stats_UI();
     }
 })
 buy_hedge.addEventListener("click", () => {
@@ -888,7 +1134,9 @@ buy_hedge.addEventListener("click", () => {
             fifty_hedge_funds = true;
             hedge_MPS *= 2;
             money_per_sec *= 2;
-            double_money_pop_up("hedge funds");
+            static_events_queue.push(() => {
+                double_money_pop_up("hedge funds");
+            })
             update_MPS_text(hedge_mps_text, hedge_MPS);
         }
 
@@ -913,7 +1161,7 @@ buy_hedge.addEventListener("click", () => {
         buy_hedge.textContent = "Buy for $" + abbreviate(buy_hedge_price);
         sell_hedge.textContent = "Sell for $" + abbreviate(sell_hedge_price);
         hedge_mps_text.textContent = hedge_MPS;  
-        update_UI();
+        update_stats_UI();
     }
 })
 buy_space_mine.addEventListener("click", () => {
@@ -926,7 +1174,9 @@ buy_space_mine.addEventListener("click", () => {
             fifty_minings = true;
             mine_MPS *= 2;
             money_per_sec *= 2;
-            double_money_pop_up("space mines");
+            static_events_queue.push(() => {
+                double_money_pop_up("space mines");
+            })
             update_MPS_text(mine_mps_text, mine_MPS);
         }
 
@@ -952,7 +1202,7 @@ buy_space_mine.addEventListener("click", () => {
         buy_space_mine.textContent = "Buy for $" + abbreviate(buy_mine_price);
         sell_space_mine.textContent = "Sell for $" + abbreviate(sell_mine_price);
         mine_mps_text.textContent = mine_MPS;
-        update_UI();
+        update_stats_UI();
     }
 })
 buy_moon.addEventListener("click", () => {
@@ -965,7 +1215,9 @@ buy_moon.addEventListener("click", () => {
             fifty_moons = true;
             moon_MPS *= 2;
             money_per_sec *= 2;
-            double_money_pop_up("moon colonies");
+            static_events_queue.push(() => {
+                double_money_pop_up("moon colonies");
+            })
             update_MPS_text(moon_mps_text, moon_MPS);
         }
 
@@ -990,7 +1242,7 @@ buy_moon.addEventListener("click", () => {
         buy_moon.textContent = "Buy for $" + abbreviate(buy_moon_price);
         sell_moon.textContent = "Sell for $" + abbreviate(sell_moon_price);
         moon_mps_text.textContent = moon_MPS;
-        update_UI();
+        update_stats_UI();
     }
 })
 
@@ -1020,7 +1272,7 @@ sell_lemonade.addEventListener("click", () => {
         lemonade_stands.textContent = lemonade;
         buy_lemonade.textContent = "Buy for $" + abbreviate(buy_lemonade_price);
         sell_lemonade.textContent = "Sell for $" + abbreviate(sell_lemonade_price);
-        update_UI();
+        update_stats_UI();
     }
 })
 sell_food.addEventListener("click", () => {
@@ -1048,13 +1300,12 @@ sell_food.addEventListener("click", () => {
         food_trucks.textContent = food;
         buy_food.textContent = "Buy for $" + abbreviate(buy_food_price);
         sell_food.textContent = "Sell for $" + abbreviate(sell_food_price);
-        update_UI();
+        update_stats_UI();
     }
 })
 sell_store.addEventListener("click", () => {
     if(store >= 1) {
         store--;
-        console.log(store);
 
         add_history(`Sold a small grocery store for $${abbreviate(sell_store_price)}!`, "loss");
 
@@ -1078,7 +1329,7 @@ sell_store.addEventListener("click", () => {
         small_stores.textContent = store;
         buy_store.textContent = "Buy for $" + abbreviate(buy_store_price);
         sell_store.textContent = "Sell for $" + abbreviate(sell_store_price);
-        update_UI();
+        update_stats_UI();
     }
 })
 sell_restaurant.addEventListener("click", () => {
@@ -1106,7 +1357,7 @@ sell_restaurant.addEventListener("click", () => {
         restaurants.textContent = restaurant;
         buy_restaurant.textContent = "Buy for $" + abbreviate(buy_restaurant_price);
         sell_restaurant.textContent = "Sell for $" + abbreviate(sell_restaurant_price);
-        update_UI();
+        update_stats_UI();
     }
 })
 sell_apartment.addEventListener("click", () => {
@@ -1116,7 +1367,7 @@ sell_apartment.addEventListener("click", () => {
         add_history(`Sold a apartment complex for $${abbreviate(sell_apartment_price)}!`, "loss");
 
         const result = sell_property({
-            property: restaurant,
+            property: apartment,
             sell_property_price: sell_apartment_price,
             net_worth,
             cash,
@@ -1134,7 +1385,7 @@ sell_apartment.addEventListener("click", () => {
         apartments.textContent = apartment;
         buy_apartment.textContent = "Buy for $" + abbreviate(buy_apartment_price);
         sell_apartment.textContent = "Sell for $" + abbreviate(sell_apartment_price);
-        update_UI();
+        update_stats_UI();
     }
 })
 sell_real_estate.addEventListener("click", () => {
@@ -1163,7 +1414,7 @@ sell_real_estate.addEventListener("click", () => {
         real_estates.textContent = real_estate;
         buy_real_estate.textContent = "Buy for $" + abbreviate(buy_real_estate_price);
         sell_real_estate.textContent = "Sell for $" + abbreviate(sell_real_estate_price);
-        update_UI();
+        update_stats_UI();
     }
 })
 sell_tech.addEventListener("click", () => {
@@ -1192,7 +1443,7 @@ sell_tech.addEventListener("click", () => {
         tech_starts.textContent = tech;
         buy_tech.textContent = "Buy for $" + abbreviate(buy_tech_price);
         sell_tech.textContent = "Sell for $" + abbreviate(sell_tech_price);
-        update_UI();
+        update_stats_UI();
     }
 })
 sell_hedge.addEventListener("click", () => {
@@ -1221,7 +1472,7 @@ sell_hedge.addEventListener("click", () => {
         hedge_funds.textContent = hedge;
         buy_hedge.textContent = "Buy for $" + abbreviate(buy_hedge_price);
         sell_hedge.textContent = "Sell for $" + abbreviate(sell_hedge_price);
-        update_UI();
+        update_stats_UI();
     }
 })
 sell_space_mine.addEventListener("click", () => {
@@ -1252,7 +1503,7 @@ sell_space_mine.addEventListener("click", () => {
         space_mines.textContent = mine;
         buy_space_mine.textContent = "Buy for $" + abbreviate(buy_mine_price);
         sell_space_mine.textContent = "Sell for $" + abbreviate(sell_mine_price);
-        update_UI();
+        update_stats_UI();
     }
 })
 sell_moon.addEventListener("click", () => {
@@ -1275,14 +1526,14 @@ sell_moon.addEventListener("click", () => {
         cash = result.cash;
         buy_moon_price = result.buy_price;
         sell_moon_price = result.sell_price;
-        money_per_sec -= mine_MPS;
+        money_per_sec -= moon_MPS;
 
         total_property--;
 
         moon_colonies.textContent = moon;
         buy_moon.textContent = "Buy for $" + abbreviate(buy_moon_price);
         sell_moon.textContent = "Sell for $" + abbreviate(sell_moon_price);
-        update_UI();
+        update_stats_UI();
     }
 })
 //~~~~~~~~~~~~~~~~~~~~~~~~ popup btns ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1299,20 +1550,47 @@ acknowledge_btn.addEventListener("click", () => {
     is_pop_up_open = false;
 })
 
+acknowledge_btn2.addEventListener("click", () => {
+    overlay2.classList.remove("show");
+    overlay2.classList.add("hidden");
+    acknowledge_btn2.classList.remove("show-btn");
+
+    accept_btn2.textContent = "";
+    reject_btn2.textContent = "";
+
+    acknowledge_btn2.onclick = null;
+
+    is_pop_up_open = false;
+})
+
+exit_gamble.addEventListener("click", () => {
+    overlay3.classList.remove("show");
+    overlay3.classList.add("hidden");
+
+    is_pop_up_open = false;
+})
+
+gamble.addEventListener("click", () => {
+    overlay3.classList.remove("hidden");
+    overlay3.classList.add("show");
+
+    is_pop_up_open = true;
+})
+
+roulette_nums.addEventListener("click", (e) => {
+    if (e.target.classList.contains("roulette-num")) {
+        const chosenNumber = e.target.dataset.number;
+
+        console.log("Player chose:", chosenNumber);
+    }
+});
+
 //~~~~~~~~~~~~~~~~~~~~~~~~ generate money btn ~~~~~~~~~~~~~~~~~~~~~~~~
 money_button.addEventListener("click", () => {
     cash += 1;
     money_text.textContent = abbreviate(cash);
     create_coin();
 });
-
-//~~~~~~~~~~~~~~~~~~~~~~~~ save functionality ~~~~~~~~~~~~~~~~~~~~~~~~
-const save_game = setInterval(() => {
-    const session_time = Date.now() - start_time;
-    total_play_time += session_time;
-    localStorage.setItem("save_state", JSON.stringify(get_game_state()));
-    add_history("!!!GAME IS AUTO SAVING!!!", "event");
-}, 5 * 60 * 1000)
 
 //~~~~~~~~~~~~~~~~~~~~~~~~ all functions ~~~~~~~~~~~~~~~~~~~~~~~~
 function create_coin() {
@@ -1437,12 +1715,13 @@ function check_coin_num() {
     return false;
 }
 
-function update_UI () {
+function update_stats_UI () {
     money_per_sec_text.textContent = abbreviate(money_per_sec);
     money_text.textContent = abbreviate(cash);
     net_worth_text.textContent = abbreviate(net_worth);
     property_text.textContent = abbreviate(total_property);
     total_minutes_played_text.textContent = get_total_minutes(total_play_time); 
+    wife_text.textContent = Math.round(wife_happiness * 100) / 100; 
 }
 
 function update_MPS_text(mps_object, mps) {
@@ -1588,6 +1867,27 @@ function get_game_state() {
         is_dog_sold,
         donated_to_homeless,
         recieved_reward,
+
+        happy_worker,
+        has_given_worker_bonus,
+        got_scammed,
+        give_to_crypto_wizard,
+
+        irs_audit,
+        audit_fined,
+
+        one,
+        one_thousand,
+        one_hundred_thou,
+        one_mil,
+        one_hundred_mil,
+        one_bil,
+        one_hundred_bil,
+        one_tril,
+        mz_milestone,
+        em_milestone,
+
+        history_stack,
     };
 }
 
@@ -1666,18 +1966,30 @@ function load_game() {
     donated_to_homeless = data.donated_to_homeless;
     recieved_reward = data.recieved_reward;
 
-    update_UI();
+    happy_worker = data.happy_worker,
+    has_given_worker_bonus = data.has_given_worker_bonus,
+    got_scammed = data.got_scammed,
+    give_to_crypto_wizard = data.give_to_crypto_wizard,
+
+    irs_audit = data.irs_audit,
+    audit_fined = data.irs_audit,
+
+    history_stack = data.history_stack,
+
+    load_history(history_stack);
+    update_stats_UI();
     update_all_text();
 }
 
 function overlay_for_taxes(tax_amount) {
-    overlay.classList.remove("hidden");
-    overlay.classList.add("show");
-    accept_btn.classList.remove("show-btn")
-    reject_btn.classList.remove("show-btn");
-    acknowledge_btn.classList.add("show-btn");
-    event_title.textContent = "Tax Season!";
-    event_text.textContent = `It's time for yearly taxes, you owe ${tax_amount} dollars to the IRS!`
+    overlay2.classList.remove("hidden");
+    overlay2.classList.add("show");
+    accept_btn2.classList.remove("show-btn")
+    reject_btn2.classList.remove("show-btn");
+    acknowledge_btn2.classList.add("show-btn");
+    event_title2.textContent = "Tax Season!";
+    event_text2.textContent = `It's time for yearly taxes, you owe ${tax_amount} dollars to the IRS!`
+
     is_pop_up_open = true;
 }
 
@@ -1699,7 +2011,7 @@ function pop_up_acknowledge(event) {
     event_text.textContent = event.description;
 }
 
-function show_choice_events(event, checker) {
+function show_choice_events(event, checker, game_object) {
     if(!checker) {
         overlay.classList.remove("hidden");
         overlay.classList.add("show");
@@ -1715,56 +2027,121 @@ function show_choice_events(event, checker) {
         reject_btn.textContent = event.reject.btn_text;
 
         accept_btn.onclick = () => {
-            early_game_event_objects[event.checker] = event.accept.accepted;
-            apply_event_effect(event.accept, early_game_event_objects);
+            game_object[event.checker] = event.accept.accepted;
+            apply_event_effect(event.accept, game_object);
             add_history(event.accept.history, event.accept.gain);
             close_pop_up();
-            if(event.has_follow_up && !early_game_event_objects[event.good_follow_up.checker]) {
+            if(event.has_follow_up && !game_object[event.good_follow_up.checker]) {
                 setTimeout(() => {
-                    early_game_event_objects[event.good_follow_up.checker] = event.good_follow_up.accepted;
-                    overlay.classList.remove("hidden");
-                    overlay.classList.add("show");
-                    accept_btn.classList.remove("show-btn")
-                    reject_btn.classList.remove("show-btn");
-                    acknowledge_btn.classList.add("show-btn");
-                    acknowledge_btn.textContent = "Yippee!!"
+                    const follow_up = event.good_follow_up;
 
-                    is_pop_up_open = true;
+                    game_object[follow_up.checker] = follow_up.accepted;
 
-                    event_title.textContent = event.good_follow_up.title;
-                    event_text.textContent = event.good_follow_up.description;
+                    if(follow_up.type === "boost") {
+                        active_boots[follow_up.target] = true;
 
+                        let original_value = game_object[follow_up.target];
+
+                        apply_event_effect(follow_up, game_object);
+
+                        setTimeout(() => {
+                            active_boots[follow_up.target] = false;
+                            game_object[follow_up.target] = original_value;
+                        }, follow_up.duration);
+                    } else {
+                        apply_event_effect(event.good_follow_up, game_object);
+                    }
+                    pop_up_acknowledge(follow_up);
                     add_history(event.good_follow_up.history, event.good_follow_up.gain);
-                    apply_event_effect(event.good_follow_up, early_game_event_objects);
                 }, event.follow_up_delay);
             }
         }
 
         reject_btn.onclick = () => {
-            early_game_event_objects[event.checker] = event.reject.accepted;
+            game_object[event.checker] = event.reject.accepted;
             add_history(event.reject.history, event.reject.gain);
-            apply_event_effect(event.reject, early_game_event_objects);
+            apply_event_effect(event.reject, game_object);
             close_pop_up();
-            if(event.has_follow_up && !early_game_event_objects[event.bad_follow_up.checker]) {
+            if(event.has_follow_up && !game_object[event.bad_follow_up.checker]) {
                 setTimeout(() => {
-                    early_game_event_objects[event.bad_follow_up.checker] = event.bad_follow_up.accepted;
-                    overlay.classList.remove("hidden");
-                    overlay.classList.add("show");
-                    accept_btn.classList.remove("show-btn")
-                    reject_btn.classList.remove("show-btn");
-                    acknowledge_btn.classList.add("show-btn");
-                    acknowledge_btn.textContent = "D:"
+                    const follow_up = event.bad_follow_up;
 
-                    is_pop_up_open = true;
+                    game_object[follow_up.checker] = follow_up.accepted;
 
-                    event_title.textContent = event.bad_follow_up.title;
-                    event_text.textContent = event.bad_follow_up.description;
+                    if(follow_up.type === "boost") {
+                        active_boots[follow_up.target] = true;
 
+                        let original_value = game_object[follow_up.target];
+
+                        apply_event_effect(follow_up, game_object);
+
+                        setTimeout(() => {
+                            active_boots[follow_up.target] = false;
+                            game_object[follow_up.target] = original_value;
+                        }, follow_up.duration);
+                    } else {
+                        apply_event_effect(event.bad_follow_up, game_object);
+                    }
+                    pop_up_acknowledge(follow_up);
                     add_history(event.bad_follow_up.history, event.bad_follow_up.gain);
-                    apply_event_effect(event.bad_follow_up, early_game_event_objects);
                 }, event.follow_up_delay);
             }
         }
+    }
+}
+
+function execute_event(game_effect, game_object, boost1, boost2, boostprop1, boostprop2) {
+    let attempts = 0;
+    let random_event;
+    let event;
+
+    do {
+        random_event = Math.floor(Math.random() * game_effect.length);
+        event = game_effect[random_event];
+        attempts++;
+        if (attempts >= 50) return;
+    } while (
+        attempts < 50 && (
+        random_event === last_pick ||
+        (event.type === "boost" && active_boots[event.target]) ||
+        (event.checker && game_object[event.checker]) ||
+        (event.target === boost1 && boostprop1 < 1) ||
+        (event.target === boost2 && boostprop2 < 1) ||
+        is_pop_up_open
+        )
+    );
+
+    if (!event) return;
+
+    last_pick = random_event;
+    add_history(event.history, event.gain);
+
+    if(event.type === "boost") {
+        active_boots[event.target] = true;
+
+        let original_value = game_object[event.target];
+
+        apply_event_effect(event, game_object);
+
+        setTimeout(() => {
+            active_boots[event.target] = false;
+            game_object[event.target] = original_value;
+        }, event.duration);
+        pop_up_acknowledge(event, event.gain);
+    }
+    
+    if(event.type === "cash") {
+        apply_event_effect(event, game_object);
+        pop_up_acknowledge(event, event.gain);
+    }
+    
+    if(event.type === "choice") {
+        show_choice_events(event, game_object[event.checker], game_object);
+    }
+
+    if(event.type === "wife") {
+        game_object[event.target2] += event.happiness;
+        apply_event_effect(event, game_object);
     }
 }
 
@@ -1787,31 +2164,41 @@ function close_pop_up() {
 
 function apply_event_effect(event, game_object) {
     if(event.mode === "flat") {
-        game_object[event.target] += event.cash_effect;
+        game_object[event.target] += event.effect;
     } else if (event.mode === "percent") {
-        game_object[event.target] *= (1 + event.cash_effect);
+        game_object[event.target] *= (1 + event.effect);
     }
-    update_UI();
+    update_stats_UI();
 }
 
 function double_money_pop_up(property) {
     const special_properties = ["tech startups", "hedge funds", "space mines", "moon colonies"];
-    overlay.classList.remove("hidden");
-    overlay.classList.add("show");
+    overlay2.classList.remove("hidden");
+    overlay2.classList.add("show");
     special_properties.includes(property)
-        ? event_text.textContent = `Congratulations on buying 25 ${property}! You're ${property} now generate 2x more money per second!`
-        : event_text.textContent = `Congratulations on buying 50 ${property}! You're ${property} now generate 2x more money per second!`;
-    acknowledge_btn.textContent = "Awesome!";
-    accept_btn.classList.remove("show-btn");
-    reject_btn.classList.remove("show-btn");
-    acknowledge_btn.classList.add("show-btn");
+        ? event_text2.textContent = `Congratulations on buying 25 ${property}! You're ${property} now generate 2x more money per second!`
+        : event_text2.textContent = `Congratulations on buying 50 ${property}! You're ${property} now generate 2x more money per second!`;
+    acknowledge_btn2.textContent = "Awesome!";
+    accept_btn2.classList.remove("show-btn");
+    reject_btn2.classList.remove("show-btn");
+    acknowledge_btn2.classList.add("show-btn");
 }
 
 function add_history(text, style) {
+    history_stack.push({h_text: text, h_style: style, t_play: total_play_time});
     const li = document.createElement("li");
-    li.textContent = text;
+    li.textContent = text + ` \n \n(Total time played: ${get_total_minutes(total_play_time)} Minutes)`;
     li.classList.add(style)
     history.appendChild(li);
+}
+
+function load_history(history_stack) {
+    for (const his_obj of history_stack) {
+        const li = document.createElement("li");
+        li.textContent = his_obj.h_text;
+        li.classList.add(his_obj.h_style);
+        history.appendChild(li);
+    }
 }
 
 function randomInterval(fn, min, max) {
@@ -1822,6 +2209,157 @@ function randomInterval(fn, min, max) {
         randomInterval(fn, min, max);
     }, delay);
 }
+
+function process_next_event() {
+    if(is_pop_up_open) return;
+    if (event_queue.length === 0) return;
+
+    const next_event = event_queue.shift();
+    next_event();
+}
+
+function process_next_static_event() {
+    if(is_pop_up_open) return;
+    if(static_events_queue.length === 0) return;
+
+    const next_static_event = static_events_queue.shift();
+    next_static_event();
+}
+
+function milestone_pop_up(text_title, text_desc) {
+    overlay2.classList.remove("hidden");
+    overlay2.classList.add("show");
+    
+    accept_btn2.classList.remove("show-btn")
+    reject_btn2.classList.remove("show-btn");
+    reject_btn2.textContent = "";
+    accept_btn2.textContent = "";
+
+    acknowledge_btn2.classList.add("show-btn");
+    event_title2.textContent = text_title;
+    event_text2.textContent = text_desc
+    is_pop_up_open = true;
+}
+
+function tick_source(count, mps, img, img_id) {
+    if (count > 0) {
+        const earned = mps * count;
+
+        update_img(count, img, img_id);
+
+        return earned;
+    } else {
+        update_img(count, img, img_id);
+        return 0;
+    } 
+}
+
+function money_ticker() {
+    let tick_income = 0;
+    tick_income += tick_source(lemonade, lemon_MPS, lemonade_img, "lemonade-img");
+    tick_income += tick_source(food, food_MPS, food_img, "food-img");
+    tick_income += tick_source(store, store_MPS, store_img, "store-img");
+    tick_income += tick_source(restaurant, restaurant_MPS, restaurant_img, "restaurant-img")
+    tick_income += tick_source(apartment, apartment_MPS, apartment_img, "apartment-img");
+    tick_income += tick_source(real_estate, real_estate_MPS, real_estate_img, "real-estate-img");
+    tick_income += tick_source(tech, tech_MPS, tech_start_img, "tech-img");
+    tick_income += tick_source(hedge, hedge_MPS, hedge_fund_img, "hedge-fund-img");
+    tick_income += tick_source(mine, mine_MPS, left_bg, "mine-bg");
+    tick_income += tick_source(moon, moon_MPS, left_bg, "moon-bg");
+
+    update_bg();
+
+    if(tick_income > 0) {
+        cash += tick_income;
+        update_stats_UI()
+    }
+
+    for(let i = 0; i < tick_income; i++) {
+        if(!check_coin_num()) break;
+        auto_gen_coin();
+    }
+}
+
+function milestone_funt() {
+        if(cash >= 1 && !one) {
+        one = true;
+        static_events_queue.push(() => {
+            milestone_pop_up("Beginning!", "Congratulatons on making your first dollar! You're slowly but surely on the way to become a trillionaire!");
+        })
+    } else if (cash >= 1000 && !one_thousand) {
+        one_thousand = true;
+        static_events_queue.push(() => {
+            milestone_pop_up("First Thousand!", "Congratulatons on collecting your first thousand dollars in cash! Go buy yourself something nice!");
+        })
+    } else if (cash >= 100000 && !one_hundred_thou) {
+        one_hundred_thou = true;
+        static_events_queue.push(() => {
+            milestone_pop_up("Big Bucks!", "You just collected 100K in cash! Go ahead and go on a spending spree!");
+        })
+    } else if (cash >= 1000000 && !one_mil) {
+        one_mil = true;
+        static_events_queue.push(() => {
+            milestone_pop_up("1 Million!", "Congrats on 1 Million dollars in cash, drinks are on you tonight!");
+        })
+    } else if (cash >= 100000000 && !one_hundred_mil) {
+        one_hundred_mil = true;
+        static_events_queue.push(() => {
+            milestone_pop_up("100 MILLION!", "You accumulated one hundred million dollars! Give yourself a pat on the back!");
+        })
+    } else if (cash >= 1000000000 && !one_bil) {
+        one_bil = true;
+        static_events_queue.push(() => {
+            milestone_pop_up("Forbes Youngest Billionaire", "Forbes lists you as the youngest billionaire in history!");
+        })
+    } else if (cash >= 100000000000 && !one_hundred_bil) {
+        one_hundred_bil = true;
+        static_events_queue.push(() => {
+            milestone_pop_up("One Hundred Billion!", "Congratulations on accumulating 100 Billion dollars! You are now the 12th richest person in the world!");
+        })
+    } else if (cash + net_worth >= 220000000000 && mz_milestone) {
+        mz_milestone = true;
+        static_events_queue.push(() => {
+            milestone_pop_up("Mark Zuckerberg", "You now have a total net worth more than Mark Zuckerberg!");
+        })
+    } else if (cash + net_worth >= 800000000000 && em_milestone) {
+        em_milestone = true;
+        static_events_queue.push(() => {
+            milestone_pop_up("Elon Musk", "You now are now worth more than Elon Musk, you have more money than you know what to do with.");
+        })
+    } else if (cash >= 1000000000000 && !one_tril) {
+        one_tril = true;
+        static_events_queue.push(() => {
+            milestone_pop_up("Trillionaire!", "You are now the first trillionaire in the world! You decided to celebrate by jumping in a pool of money!");
+        })
+    }
+}
+
+function update_play_funct() {
+    total_minutes_played_text.textContent = get_total_minutes(current_total);
+}
+
+function load_buttons() {
+    for(let i = 36; i > -1; i--) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        if(i === 0) {
+            btn.classList.add("roulette-num-green");
+        } else if(i % 2 === 0) {
+            btn.classList.add("roulette-num-black");
+
+        } else if (i % 2 === 1) {
+            btn.classList.add("roulette-num-red");
+        }
+        btn.dataset.Number = i;
+        roulette_nums.appendChild(btn);
+    }
+
+}
+
+function bet_amount_text_change() {
+    bet_amount_text.textContent = bet_amount;
+}
+load_buttons();
 
 // load_game();
 

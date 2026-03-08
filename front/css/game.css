@@ -40,7 +40,7 @@ body {
     align-items: center;
 }
 
-.money-text, .property-text, .net-worth-text, .money-per-sec-text, .minutes-played {
+.money-text, .wife-text, .property-text, .net-worth-text, .money-per-sec-text, .minutes-played {
     -webkit-text-stroke: 0.75px black;
 }
 
@@ -106,7 +106,7 @@ canvas {
     font-size: medium;
     cursor: pointer;
     border-radius: 20px;
-    background: linear-gradient(to bottom right, #FF3131, #ef4444);
+    background: linear-gradient(to bottom right, #FF3131, rgb(189, 0, 0));
     color: darkred;
     -webkit-text-stroke: 0.5px black;
     transition: transform 1s ease, box-shadow 1s ease;
@@ -199,18 +199,29 @@ canvas {
     overflow: scroll;
 }
 
-.history-container {
+.gamble-log-text-container {
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+}
+
+.history-container, .gamble-log-container {
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
     gap: 5px;
     padding-left: 10px;
-    font-size: 18px;
+    font-size: 24px;
+    font-family: 'Times New Roman', Times, serif;
     list-style: none;
 }
 
+.gamble-log-container {
+    margin: 0;
+}
+
 /* event pop-up styling */
-#overlay {
+#overlay, #overlay2 {
     display: none;
     justify-content: center;
     align-items: center;
@@ -221,46 +232,112 @@ canvas {
     background-color: hsla(0, 0%, 0%, 0.50);
 }
 
-#overlay.show {
+#overlay3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    background-color: hsla(0, 0%, 0%, 0.50);
+    flex-wrap: wrap;
+}
+
+
+#overlay2 {
+    z-index: 6;
+}
+
+#overlay3 {
+    z-index: 7;
+    gap: 75px;
+    align-items: flex-start;
+}
+
+#overlay.show, #overlay2.show, #overlay3.show {
     display: flex;
 }
 
-#overlay.hidden {
+#overlay.hidden, #overlay2.hidden, #overlay3.hidden {
     display: none;
 }
 
-.popup-box {
+.popup-box, .gamble-popup-box1, .gamble-popup-box2, .gamble-popup-box3 {
     display: flex;
     position: fixed;
-    top: 200px;
-    width: 400px;
-    height: 500px;
+    top: 50px;
     background-color: white;
     border: 4px solid black;
+    border-radius: 16px;
     flex-direction: column;
     padding: 10px;
 }
 
-.event-title {
+.gamble-popup-box1, .gamble-popup-box3 {
+    position: relative;
+    width: 422px;
+    height: 645px;
+}
+
+.gamble-popup-box2{
+    height: auto;
+    position: relative;
+}
+
+.event-title, .gamble-title {
     display: flex;
     justify-content: center;
     font-size: 32px;
     padding: 5px;
     background-color: palevioletred;
+    border-radius: 4px;
     border: 2px solid black;
 }
 
-.event-text {
+.event-text, .gamble-text, .gamble2-container, .log-text {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
     background-color: palevioletred;
+    border-radius: 4px;
     padding: 10px;
     height: 75%;
     border: 2px solid black;
     font-size: 24px;
     text-align: center;
     white-space: pre-line;
+}
+
+.log-text {
+    text-align: start;
+    height: 100%;
+}
+
+.gamble-text, .gamble-numbers, .gamble2-container{
+    height: auto;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gamble-numbers {
+    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(6, 50px);
+    grid-auto-rows: 50px;
+    align-content: start;
+
+    place-items: center;
+}
+
+.gamble-numbers > button:last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+}
+
+.gamble-numbers > button {
+    width: 40px;
+    height: 40px;
 }
 
 .option-row {
@@ -453,6 +530,222 @@ canvas {
     font-size: 18px;
 }
 
+/* gambling stuff*/
+.gamble-btn {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    padding: 5px;
+    border-radius: 8px;
+    transition: transform 1s ease, box-shadow 1s ease;
+    cursor: pointer;
+    background: linear-gradient(to bottom right, orange, darkorange);
+    font-family: cursive;
+    color: brown;
+    font-size: large;
+    -webkit-text-stroke: 0.25px black;
+}
+
+.gamble-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 3px 3px 3px rgb(190, 100, 0);
+}
+
+.gamble-btn:active {
+    transform: translateY(1px);
+    box-shadow: 1px 1px 1px rgb(190, 100, 0);;
+}
+
+.add-money-btns {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 10px;
+    flex-direction: row;
+}
+
+.add-money-btn, .remove-money-btn {
+    display: flex;
+    padding: 10px;
+    background: linear-gradient(to bottom right, lime, green);
+    font-family: 'Times New Roman', Times, serif;
+    font-size: large;
+    width: 85px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-money-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 4px 4px 4px darkgreen;
+}
+
+.add-money-btn:active {
+    transform: translateY(2px);
+    box-shadow: 2px 2px 1px darkgreen;
+}
+
+.remove-money-btn {
+    background: linear-gradient(to bottom right, red, darkred);
+}
+
+.remove-money-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 4px 4px 4px darkred;
+}
+
+.remove-money-btn:active {
+    transform: translateY(2px);
+    box-shadow: 2px 2px 2px darkred;
+}
+
+.gambling-stats {
+    margin-bottom: 10px;
+}
+
+.exit-btn {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.exit-btn > img {
+    width: 40px;
+    opacity: 40%;
+}
+
+.exit-btn:hover > img {
+    opacity: 100%;
+}
+
+.gamble-int {
+    font-family: 'Times New Roman', Times, serif;
+    width: 150px;
+    height: 50px;
+    font-size: 32px;
+    border-radius: 5px;
+    background: linear-gradient(to bottom right, lime, darkgreen);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.gamble-int:hover {
+    transform: scale(1.04);
+    box-shadow: 4px 4px 4px darkgreen;
+}
+
+.roulette-num-red, .roulette-num-black, .roulette-num-green {
+    background: linear-gradient(to bottom right, crimson, darkred);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 4px;
+}
+
+.gamble-section{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+}
+
+.gamble-color, .gamble-even-or-odd, .gamble-2-sec {
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    width: 100%;
+}
+
+.red-btn, .black-btn, .even-btn, .odd-btn, .section-btn, .two-section-btn {
+    font-size: 24px;
+    font-family: 'Times New Roman', Times, serif;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    width: 100px;
+}
+
+.section-btn {
+    background: linear-gradient(to bottom right, yellow, gold);
+}
+
+.section-btn:hover {
+    transform: scale(1.04);
+    box-shadow: 4px 4px 4px #8B8000;
+}
+
+.section-btn:active {
+    transform: translateY(2px);
+    box-shadow: 2px 2px 2px #8B8000;
+}
+
+.two-section-btn {
+    background: linear-gradient(to bottom right, orange, #A34700);
+}
+
+.two-section-btn:hover {
+    transform: scale(1.04);
+    box-shadow: 4px 4px 4px #A34700;
+}
+
+.two-section-btn:active {
+    transform: translateY(2px);
+    box-shadow: 2px 2px 2px #A34700;
+}
+
+
+.red-btn, .odd-btn {
+    background: linear-gradient(to bottom right, crimson, darkred);
+}
+
+.roulette-num-green, .even-btn {
+    background: linear-gradient(to bottom right, lime, darkgreen);
+}
+
+.roulette-num-black, .black-btn {
+    background: linear-gradient(to bottom right, #353839, black);
+    color: white;
+}
+
+.roulette-num-green:hover, .even-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 4px 4px 4px darkgreen;
+}
+
+.roulette-num-green:active, .even-btn:active {
+    transform: translate(2px);
+    box-shadow: 2px 2px 2px darkgreen;
+}
+
+.roulette-num-black:hover, .black-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 4px 4px 4px black;
+}
+
+.roulette-num-black:active, .black-btn:active {
+    transform: translateY(2px);
+    box-shadow: 2px 2px 2px black;
+}
+
+.roulette-num-red:hover, .red-btn:hover, .odd-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 4px 4px 4px darkred;
+}
+
+.roulette-num-red:active, .red-btn:active, .odd-btn:active {
+    transform: translateY(2px);
+    box-shadow: 2px 2px 2px darkred;
+}
+
 .gain::before { 
     content: "+ "; color: lime; 
 }
@@ -461,4 +754,11 @@ canvas {
 }
 .event::before { 
     content: "• "; color: gold; 
+}
+
+.divider {
+    border: none;
+    height: 2px;
+    background-color: black;
+    width: 100%;
 }

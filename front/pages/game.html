@@ -24,6 +24,8 @@
             <div id="tech_img"></div>
             <div id="hedge_fund_img"></div>
             <div class="fg-layer">
+                <button id="gamble" class="gamble-btn">Gamble Your Money</button>
+
                 <button id="generate-money" class="generate-money">Generate Money</button>
             </div>
         </div>
@@ -31,6 +33,9 @@
             <div class="money-box">
                 <div>
                 You currently have: $<span id="money_text" class="money-text" style="color: purple">0</span>
+                </div>
+                <div>
+                Wife's Happiness: <span id="wife_text" class="wife-text" style="color: pink">100</span>%
                 </div>
                 <div>
                 Total property net worth: $<span id="net_worth_text" class="net-worth-text" style="color: orange;">0</span>
@@ -151,6 +156,85 @@
                     <button class="accept-button" id="accept">Accept</button>
                     <button class="acknowledge-button" id="acknowledge">:D</button>
                     <button class="reject-button" id="reject">Reject</button>
+                </div>
+            </div>
+        </div>
+        <div id="overlay2">
+            <div class="popup-box">
+                <div class="event-title" id="event_title2">Event Title</div>
+                <div class="event-text">
+                    <span id="event_text2">Event</span>
+                </div>
+                <div class="option-row">
+                    <button class="accept-button" id="accept2">Accept</button>
+                    <button class="acknowledge-button" id="acknowledge2">:D</button>
+                    <button class="reject-button" id="reject2">Reject</button>
+                </div>
+            </div>
+        </div>
+        <div id="overlay3">
+            <button class="exit-btn" id="exit_gamble">
+                <img src="../assets/exit.png" alt="">
+            </button>
+            <div class="gamble-popup-box1">
+                <div class="gamble-title">Roulette!</div>
+                <div class="gamble-text">
+                    <span style="align-self: center;">🎰 Gamble your money away! 🎰</span>
+                    <div class="add-money-btns">
+                        <button class="add-money-btn" id="add_1k">Add $1K</button>
+                        <button class="add-money-btn" id="add_10k">Add $10K</button>
+                        <button class="add-money-btn" id="add_100k">Add $100K</button>
+                        <button class="add-money-btn" id="add_1m">Add $10M</button>
+                    </div>
+                    <div class="add-money-btns">
+                        <button class="remove-money-btn" id="remove_1k">Remove $1K</button>
+                        <button class="remove-money-btn" id="remove_10k">Remove $10K</button>
+                        <button class="remove-money-btn" id="remove_100k">Remove $100K</button>
+                        <button class="remove-money-btn" id="remove_1m">Remove $10M</button>
+                    </div>
+                    <div class="gambling-stats">
+                        Your Bet: $<span id="bet_amount" style="color: lime; -webkit-text-stroke: 1px darkgreen; font-weight: 900;">0</span>
+                        Total Money Won: $<span>0</span>
+                    </div>
+                    <img src="../assets/roulette_gif.gif" style="border: 2px solid white; border-radius: 10px; margin-bottom: 10px; width: 320px; height: 260px;">
+                </div>
+            </div>
+            <div class="gamble-popup-box2">
+                <div class="gamble-title">Make Your Bet!</div>
+                <div class="gamble2-container">
+                    <div class="gamble-numbers"id="roulette_nums"></div>
+                    <hr class="divider">
+                    <div class="gamble-section">
+                        <button class="section-btn">1st 12</button>
+                        <button class="section-btn">2nd 12</button>
+                        <button class="section-btn">3rd 12</button>
+                    </div>
+                    <hr class="divider">
+                    <div class="gamble-color">
+                        <button class="red-btn">Red</button>
+                        <button class="black-btn">Black</button>
+                    </div>
+                    <hr class="divider">
+                    <div class="gamble-even-or-odd">
+                        <button class="even-btn">Even</button>
+                        <button class="odd-btn">Odd</button>
+                    </div>
+                    <hr class="divider">
+                    <div class="gamble-2-sec">
+                        <button class="two-section-btn">1 - 18</button>
+                        <button class="two-section-btn">19 - 36</button>
+                    </div>
+                    <hr class="divider">
+                    <button id="gamble_int" class="gamble-int">Gamble!</button>
+                </div>
+            </div>
+            <div class="gamble-popup-box3">
+                <div class="gamble-title">Log</div>
+                <div class="log-text">
+                    <div class="gamble-log-text-container">
+                        <ul class="gamble-log-container" id="gamble_log">
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
