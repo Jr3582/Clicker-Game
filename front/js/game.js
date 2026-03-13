@@ -79,7 +79,23 @@ const reject_btn2 = document.getElementById("reject2");
 const overlay3 = document.getElementById("overlay3");
 const exit_gamble = document.getElementById("exit_gamble");
 const gamble = document.getElementById("gamble");
-const roulette_nums = document.getElementById("roulette_nums");
+const roulette_grid = document.getElementById("roulette_grid");
+const gamble_log = document.getElementById("gamble_log");
+const gamble_container = document.getElementById("log_text_container");
+const section_btns = document.querySelectorAll(".section-btn");
+const red_btn = document.getElementById("red");
+const black_btn = document.getElementById("black");
+const even_btn = document.getElementById("even");
+const odd_btn = document.getElementById("odd");
+const first_half = document.getElementById("half1");
+const second_half = document.getElementById("half2");
+const gamble_int = document.getElementById("gamble_int");
+
+//loading buttons and object array before query selecting
+const gamble_button_num = [];
+let player_bets = [];
+load_buttons();
+const roulette_num_btns = document.querySelectorAll(".roulette-num-green, .roulette-num-red, .roulette-num-black");
 
 //adding images
 const lemonade_img = document.getElementById("lemonade_img");
@@ -818,22 +834,22 @@ add_million.addEventListener("click", () => {
 //remove money from bet
 remove_onek.addEventListener("click", () => {
     bet_amount -= 1000;
-    if(bet_amount < 0) {bet_amount = 0;}
+    if(bet_amount < -100000000) {bet_amount = -100000000;}
     bet_amount_text_change();
 })
 remove_tenk.addEventListener("click", () => {
     bet_amount -= 10000;
-    if(bet_amount < 0) {bet_amount = 0;}
+    if(bet_amount < -100000000) {bet_amount = -100000000;}
     bet_amount_text_change();
 })
 remove_hundredk.addEventListener("click", () => {
     bet_amount -= 100000;
-    if(bet_amount < 0) {bet_amount = 0;}
+    if(bet_amount < -100000000) {bet_amount = -100000000;}
     bet_amount_text_change();
 })
 remove_million.addEventListener("click", () => {
     bet_amount -= 10000000;
-    if(bet_amount < 0) {bet_amount = 0;}
+    if(bet_amount < -100000000) {bet_amount = -100000000;}
     bet_amount_text_change();
 })
 
@@ -1563,6 +1579,8 @@ acknowledge_btn2.addEventListener("click", () => {
     is_pop_up_open = false;
 })
 
+//~~~~~~~~~~~~~~~~~~~~~~~~ gamble btns ~~~~~~~~~~~~~~~~~~~~~~~~
+
 exit_gamble.addEventListener("click", () => {
     overlay3.classList.remove("show");
     overlay3.classList.add("hidden");
@@ -1577,14 +1595,386 @@ gamble.addEventListener("click", () => {
     is_pop_up_open = true;
 })
 
-roulette_nums.addEventListener("click", (e) => {
-    if (e.target.classList.contains("roulette-num")) {
-        const chosenNumber = e.target.dataset.number;
+roulette_num_btns.forEach(button => {
+    button.addEventListener("click", () => {
+        const number = Number(button.dataset.number);
+        const number_data = gamble_button_num[number];
+        const bet = player_bets.find(bet => bet.num === number);
 
-        console.log("Player chose:", chosenNumber);
+        if(gamble_checkers1()) {return};
+
+        if(bet) {
+            if((bet.amount + bet_amount) < 0) {
+                add_gamble_log(`You cannot place a negative bet on ${number_data.num}`);
+                return;
+            }
+
+            bet.amount += bet_amount;
+            cash -= bet_amount;
+            gamble_checkers2(bet, number_data);
+
+            add_gamble_log(`You placed another bet on ${number_data.num} ${number_data.color}, your total bet is now $${bet.amount}`);
+        } else {
+            player_bets.push({num: number, color: number_data.color, amount: bet_amount});
+            cash -= bet_amount;
+            add_gamble_log(`You placed a $${bet_amount} bet on ${number_data.num} ${number_data.color}`);
+        }
+        update_stats_UI();
+    })
+})
+
+section_btns.forEach(button => {
+    button.addEventListener("click", () => {
+        const section = button.dataset.action;
+        const bet = player_bets.find(bet => bet.sec === section);
+
+        if(gamble_checkers1(bet)) {return};
+
+        if(bet) {
+            if((bet.amount + bet_amount) < 0) {
+                add_gamble_log(`You cannot place a negative bet on ${number_data.num}`);
+                return;
+            }
+
+            bet.amount += bet_amount;
+            cash -= bet_amount;
+            if(gamble_checkers2(bet)){return};
+            
+            if(bet.amount === 0) {
+                const index = player_bets.indexOf(bet_object);
+                player_bets.splice(index, 1);
+                add_gamble_log(`Removing ${bet.sec} because you removed all money from the section`);
+                return;
+            }
+
+            add_gamble_log(`You placed another bet on the ${bet.sec} section, your total bet is now $${bet.amount}`);
+        } else {
+            player_bets.push({sec: section, amount: bet_amount});
+
+            cash -= bet_amount;
+
+            add_gamble_log(`You placed a $${bet_amount} bet on the ${section} section`, "event");
+        }
+    })
+})
+
+red_btn.addEventListener("click", () => {
+    const bet = player_bets.find(bet => bet.color_bet === "red");
+
+    if(gamble_checkers1(bet)) {return};
+
+    if(bet) {
+        if((bet.amount + bet_amount) < 0) {
+            add_gamble_log(`You cannot place a negative bet on red`);
+            return;
+        }
+
+        bet.amount += bet_amount;
+        cash -= bet_amount;
+
+        if(gamble_checker_for_colors_and_section(
+            `You removed $${Math.abs(bet_amount)} from ${bet.color}, your total bet is now $${bet.amount}`,
+            `Removed ${bet.color_bet} bet because it reached $0`, 
+            bet)) {return};
+        add_gamble_log(`You placed another bet on red, your total bet is now $${bet.amount}`)
+    } else {
+        player_bets.push({color_bet: "red", amount: bet_amount});
+        cash -= bet_amount;
+        add_gamble_log(`You placed a $${bet_amount}, bet on red`, "event")
     }
+    update_stats_UI();
+
+})
+
+black_btn.addEventListener("click", () => {
+    const bet = player_bets.find(bet => bet.color_bet === "black");
+
+    if(gamble_checkers1(bet)) {return};
+
+    if(bet) {
+        if((bet.amount + bet_amount) < 0) {
+            add_gamble_log(`You cannot place a negative bet on black`);
+            return;
+        }
+
+        bet.amount += bet_amount;
+        cash -= bet_amount;
+
+        if(gamble_checker_for_colors_and_section(
+            `You removed $${Math.abs(bet_amount)} from ${bet.color_bet}, your total bet is now $${bet.amount}`,
+            `Removed ${bet.color_bet} bet because it reached $0`, 
+            bet)) {return};
+        add_gamble_log(`You placed another bet on black, your total bet is now $${bet.amount}`)
+    } else {
+        player_bets.push({color_bet: "black", amount: bet_amount});
+        cash -= bet_amount;
+        add_gamble_log(`You placed a $${bet_amount}, bet on black`)
+    }
+    update_stats_UI();
+})
+
+odd_btn.addEventListener("click", () => {
+
+    const bet = player_bets.find(bet => bet.parity === "odd");
+
+    if(gamble_checkers1(bet)) { return };
+
+    if(bet) {
+
+        if((bet.amount + bet_amount) < 0) {
+            add_gamble_log(`You cannot place a negative bet on odd`);
+            return;
+        }
+
+        bet.amount += bet_amount;
+        cash -= bet_amount;
+
+        if(gamble_checker_for_colors_and_section(
+            `You removed $${Math.abs(bet_amount)} from ${bet.parity}, your total bet is now $${bet.amount}`,
+            `Removed ${bet.color} bet because it reached $0`, 
+            bet)) { return };
+
+        add_gamble_log(`You placed another bet on odd, your total bet is now $${bet.amount}`);
+
+    } else {
+
+        player_bets.push({parity: "odd", amount: bet_amount});
+
+        cash -= bet_amount;
+
+        add_gamble_log(`You placed a $${bet_amount} bet on odd`,"event");
+    }
+
+    update_stats_UI();
 });
 
+even_btn.addEventListener("click", () => {
+    const bet = player_bets.find(bet => bet.parity === "even");
+
+    if(gamble_checkers1(bet)) { return };
+
+    if(bet) {
+
+        if((bet.amount + bet_amount) < 0) {
+            add_gamble_log(`You cannot place a negative bet on even`);
+            return;
+        }
+
+        bet.amount += bet_amount;
+        cash -= bet_amount;
+
+        if(gamble_checker_for_colors_and_section(
+            `You removed $${Math.abs(bet_amount)} from ${bet.parity}, your total bet is now $${bet.amount}`,
+            `Removed ${bet.parity} bet because it reached $0`, 
+            bet)) { return };
+
+        add_gamble_log(`You placed another bet on even, your total bet is now $${bet.amount}`);
+
+    } else {
+
+        player_bets.push({parity: "even", amount: bet_amount});
+
+        cash -= bet_amount;
+
+        add_gamble_log(`You placed a $${bet_amount} bet on even`,"event");
+    }
+
+    update_stats_UI();
+});
+
+first_half.addEventListener("click", () => {
+    const bet = player_bets.find(bet => bet.half === "first half");
+
+    if(gamble_checkers1(bet)) { return };
+
+    if(bet) {
+
+        if((bet.amount + bet_amount) < 0) {
+            add_gamble_log(`You cannot place a negative bet on this bet!`);
+            return;
+        }
+
+        bet.amount += bet_amount;
+        cash -= bet_amount;
+
+        if(gamble_checker_for_colors_and_section(`You removed $${Math.abs(bet_amount)} from ${bet.half}, your total bet is now $${bet.amount}`,`Removed ${bet.half} bet because it reached $0`, bet)) { return };
+
+        add_gamble_log(`You placed another bet on the first half, your total bet is now $${bet.amount}`);
+
+    } else {
+        player_bets.push({half: "first half", amount: bet_amount});
+
+        cash -= bet_amount;
+
+        add_gamble_log(`You placed a $${bet_amount} bet on the first half`,"event");
+    }
+
+    update_stats_UI();
+
+})
+
+second_half.addEventListener("click", () => {
+    const bet = player_bets.find(bet => bet.half === "second half");
+
+    if(gamble_checkers1(bet)) { return };
+
+    if(bet) {
+
+        if((bet.amount + bet_amount) < 0) {
+            add_gamble_log(`You cannot place a negative bet on this bet!`);
+            return;
+        }
+
+        bet.amount += bet_amount;
+        cash -= bet_amount;
+
+        if(gamble_checker_for_colors_and_section(`You removed $${Math.abs(bet_amount)} from ${bet.half}, your total bet is now $${bet.amount}`,`Removed ${bet.half} bet because it reached $0`, bet)) { return };
+
+        add_gamble_log(`You placed another bet on the second half, your total bet is now $${bet.amount}`);
+
+    } else {
+
+        player_bets.push({half: "second half", amount: bet_amount});
+
+        cash -= bet_amount;
+
+        add_gamble_log(`You placed a $${bet_amount} bet on the second half`,"event");
+    }
+
+    update_stats_UI();
+
+});
+
+gamble_int.addEventListener("click", () => {
+    let win_num, win_section, win_color, win_parity, win_half;
+    let num_multiplier;
+    let sec_multiplier = 2;
+    let color_multiplier = 2;
+    let parity_multiplier = 2;
+    let half_multipler = 2;
+    let total_winnings = 0;
+    let total_bet = 0;
+    const bet_nums = player_bets.filter(bet => "num" in bet);
+    const bet_sec = player_bets.filter(bet => "sec" in bet);
+    const bet_color = player_bets.filter(bet => "color_bet" in bet);
+    const bet_parity = player_bets.filter(bet => "parity" in bet);
+    const bet_half = player_bets.filter(bet => "half" in bet);
+    const bet_amount = player_bets.map(bet => bet.amount);
+
+    for(n in bet_amount) {
+        total_bet += bet_amount[n];
+    }
+    console.log(total_bet);
+
+    win_num = Math.floor(Math.random() * 37);
+    // calculate winning win_number
+    if(win_num === 0) {
+        win_color = "green";
+        win_parity = null;
+        win_half = null;
+        win_section = null;
+    }
+
+    if(win_num <= 18) {
+        win_half = "first half";
+    } else {
+        win_half = "second half";
+    }
+
+    if(win_num <= 12 && win_num !== 0) {
+        win_section = "first";
+    } else if (win_num > 12 && win_num <= 24) {
+        win_section = "second";
+    } else if (win_num > 24) {
+        win_section = "third";
+    }
+
+    if(win_num % 2 === 0 && win_num !== 0) {
+        win_color = "black";
+        win_parity = "even";
+    } else if (win_num % 2 === 1) {
+        win_color = "red";
+        win_parity = "odd";
+    }
+
+    //calculate multiplier for winning bet
+    switch(bet_nums.length) {
+        case 1:
+            num_multiplier = 35;
+            break;
+        case 2:
+            num_multiplier = 17;
+            break;
+        case 3: 
+            num_multiplier = 11;
+            break;
+        case 4:
+            num_multiplier = 8;
+            break;
+        case 5:
+            num_multiplier = 6;
+            break;
+        case 6:
+            num_multiplier = 5;
+            break;
+        case 7:
+            num_multiplier = 4;
+        default:
+            num_multiplier = 1;
+    }
+
+    //calculate winnings for single number bets
+    total_winnings += calculate_winnings(bet_nums, "num", win_num, num_multiplier);
+
+    // winnings for betting section
+    total_winnings += calculate_winnings(bet_sec, "sec", win_section, sec_multiplier);
+
+    //winnings for betting color
+    total_winnings += calculate_winnings(bet_color, "color_bet", win_color, color_multiplier);
+
+    //calculate winings for betting parity
+    total_winnings += calculate_winnings(bet_parity, "parity", win_parity, parity_multiplier);
+
+    //calculate winnings for betting halfs
+    total_winnings += calculate_winnings(bet_half, "half", win_half, half_multipler);
+
+    let net_gain = total_winnings - total_bet;
+    let win_sign;
+    let gain_or_loss;
+
+    if(net_gain < 0) {
+        gain_or_loss = "loss";
+        win_sign = "-";
+    } else {
+        gain_or_loss = "gain";
+        win_sign = "+";
+    }
+
+    add_gamble_log("~~~~ Calculating winnings... Please wait 10 seconds! ~~~~");
+
+    setTimeout(() => {
+        if(total_winnings > 0) {
+            add_gamble_log(`You betted $${abbreviate(total_bet)}. And you won and got $${abbreviate(total_winnings)} in cash! Your net gain / loss is ${win_sign}$${abbreviate(Math.abs(net_gain))}. Resetting all bets.`, gain_or_loss);
+            add_gamble_log("~~~~ Cashing check into your bank account! ~~~~", "gain");
+            cash += total_winnings;
+            player_bets = [];
+        } else {
+            add_gamble_log(`You betted $${abbreviate(total_bet)}. And won 0 dollars, you lost all ${abbreviate(total_bet)}! Resetting all bets`, gain_or_loss);
+            player_bets = [];
+        }
+    }, 10 * 1000);
+
+    update_stats_UI();
+    
+    setTimeout(() => {
+        add_gamble_log("~~~~ Erasing the log... Please wait 3 seconds! ~~~~");
+    }, 20 * 1000);
+
+    setTimeout(() => {
+        gamble_container.replaceChildren();
+    }, 25 * 1000)
+
+})
 //~~~~~~~~~~~~~~~~~~~~~~~~ generate money btn ~~~~~~~~~~~~~~~~~~~~~~~~
 money_button.addEventListener("click", () => {
     cash += 1;
@@ -1775,18 +2165,34 @@ function update_all_text () {
 }
 
 function abbreviate(money) {
-    if(money >= 1000000000000) {
-        const new_cash = money / 1000000000000;
-        return (Math.round(new_cash * 10) / 10) + "T";
-    } else if (money >= 1000000000) {
-        const new_cash = money / 1000000000;
-        return (Math.round(new_cash * 10) / 10) + "B";
-    } else if (money >= 1000000) {
-        const new_cash = money / 1000000;
-        return (Math.round(new_cash * 10) / 10) + "M";
-    } else if (money >= 1000) {
-        const new_cash = money / 1000;
-        return (Math.round(new_cash * 10) / 10) + "K";
+    if(money > 0) {
+        if(money >= 1000000000000) {
+            const new_cash = money / 1000000000000;
+            return (Math.round(new_cash * 10) / 10) + "T";
+        } else if (money >= 1000000000) {
+            const new_cash = money / 1000000000;
+            return (Math.round(new_cash * 10) / 10) + "B";
+        } else if (money >= 1000000) {
+            const new_cash = money / 1000000;
+            return (Math.round(new_cash * 10) / 10) + "M";
+        } else if (money >= 1000) {
+            const new_cash = money / 1000;
+            return (Math.round(new_cash * 10) / 10) + "K";
+        }
+    } else {
+        if(money <= -1000000000000) {
+            const new_cash = money / 1000000000000;
+            return (Math.round(new_cash * 10) / 10) + "T";
+        } else if (money <= -1000000000) {
+            const new_cash = money / 1000000000;
+            return (Math.round(new_cash * 10) / 10) + "B";
+        } else if (money <= -1000000) {
+            const new_cash = money / 1000000;
+            return (Math.round(new_cash * 10) / 10) + "M";
+        } else if (money <= -1000) {
+            const new_cash = money / 1000;
+            return (Math.round(new_cash * 10) / 10) + "K";
+        }
     }
     return Math.round(money * 100) / 100;
 }
@@ -2187,9 +2593,17 @@ function double_money_pop_up(property) {
 function add_history(text, style) {
     history_stack.push({h_text: text, h_style: style, t_play: total_play_time});
     const li = document.createElement("li");
-    li.textContent = text + ` \n \n(Total time played: ${get_total_minutes(total_play_time)} Minutes)`;
-    li.classList.add(style)
+    li.textContent = text + `(Total time played: ${get_total_minutes(total_play_time)} Minutes)`;
+    li.classList.add(style);
     history.appendChild(li);
+}
+
+function add_gamble_log(message, style = "event") {
+    const li = document.createElement("li");
+    li.textContent = message;
+    li.classList.add(style);
+    gamble_log.appendChild(li);
+    gamble_container.scrollTop = gamble_container.scrollHeight;
 }
 
 function load_history(history_stack) {
@@ -2339,27 +2753,104 @@ function update_play_funct() {
 }
 
 function load_buttons() {
-    for(let i = 36; i > -1; i--) {
+    let sec = "first"
+    for(let i = 0; i <= 36; i++) {
+        if(i > 12 && i <= 24) {sec = "second"};
+        if(i > 24) {sec = "third"} 
         const btn = document.createElement("button");
         btn.textContent = i;
         if(i === 0) {
             btn.classList.add("roulette-num-green");
+            gamble_button_num.push({num: 0, color: "green", parity: "none", section: sec});
         } else if(i % 2 === 0) {
             btn.classList.add("roulette-num-black");
-
+            gamble_button_num.push({num: i, color: "black", parity: "even", section: sec});
         } else if (i % 2 === 1) {
             btn.classList.add("roulette-num-red");
+            gamble_button_num.push({num: i, color: "red", parity: "odd", section: sec});
         }
-        btn.dataset.Number = i;
-        roulette_nums.appendChild(btn);
+        btn.dataset.number = i;
+        roulette_grid.appendChild(btn);
     }
-
 }
 
 function bet_amount_text_change() {
     bet_amount_text.textContent = bet_amount;
+    if(bet_amount < 0) {
+        bet_amount_text.classList.remove("positive");
+        bet_amount_text.classList.add("negative");
+    } else {
+        bet_amount_text.classList.remove("negative");
+        bet_amount_text.classList.add("positive");
+    }
 }
-load_buttons();
+
+function gamble_checkers1(bet) {
+    if(!bet && bet_amount < 0) {
+        add_gamble_log("You cannot make a negative bet!"); 
+        return true;
+    };
+        
+    if(bet_amount === 0) {
+        add_gamble_log("Please add money before making a bet!");
+        return true;
+    }
+}
+
+function gamble_checkers2(bet_object, number_data) {
+    if(bet_amount < 0) {
+        add_gamble_log(`You removed $${Math.abs(bet_amount)} on ${number_data.num} ${number_data.color}, your total bet is now $${bet_object.amount} on ${number_data.num} ${number_data.color}`, "loss");
+        return true;
+    }
+
+    if(bet_object.amount === 0 && number_data) {
+        const index = player_bets.indexOf(bet_object);
+        player_bets.splice(index, 1);
+        add_gamble_log(`Removing ${number_data.num} ${number_data.color} because you removed all money from the number`);
+        return true;
+    }
+
+    if(cash <= 0) {
+        add_gamble_log("You ran out of cash! You can no longer add money!", "loss");
+        return true;
+    };
+}
+
+function gamble_checker_for_colors_and_section(subtract_money_text, remove_text ,bet_object) {
+    if(bet_amount < 0) {
+        add_gamble_log(subtract_money_text);
+        return true;
+    }
+
+    if(bet_object.amount === 0) {
+        const index = player_bets.indexOf(bet_object);
+        player_bets.splice(index, 1);
+
+        add_gamble_log(remove_text)
+        update_stats_UI();
+        return true;
+    }
+
+    if(cash <= 0) {
+        add_gamble_log("You ran out of cash! You can no longer add money!", "loss");
+        return true;
+    };
+}
+
+function calculate_winnings(obj_arr, prop, winning_var, multiplier) {
+    let winnings = 0;
+
+    if(obj_arr.length !== 0) {
+        for(let obj of obj_arr) {
+            if(obj[prop] === winning_var) {
+                winnings += multiplier * obj.amount;
+            }
+        }
+    }
+    return winnings;
+}
+
+
 
 // load_game();
 

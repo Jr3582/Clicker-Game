@@ -193,7 +193,7 @@
                         <button class="remove-money-btn" id="remove_1m">Remove $10M</button>
                     </div>
                     <div class="gambling-stats">
-                        Your Bet: $<span id="bet_amount" style="color: lime; -webkit-text-stroke: 1px darkgreen; font-weight: 900;">0</span>
+                        Your Bet: $<span id="bet_amount" class="positive">0</span>
                         Total Money Won: $<span>0</span>
                     </div>
                     <img src="../assets/roulette_gif.gif" style="border: 2px solid white; border-radius: 10px; margin-bottom: 10px; width: 320px; height: 260px;">
@@ -202,27 +202,27 @@
             <div class="gamble-popup-box2">
                 <div class="gamble-title">Make Your Bet!</div>
                 <div class="gamble2-container">
-                    <div class="gamble-numbers"id="roulette_nums"></div>
+                    <div class="gamble-numbers"id="roulette_grid"></div>
                     <hr class="divider">
                     <div class="gamble-section">
-                        <button class="section-btn">1st 12</button>
-                        <button class="section-btn">2nd 12</button>
-                        <button class="section-btn">3rd 12</button>
+                        <button class="section-btn" data-action="first">1st 12</button>
+                        <button class="section-btn" data-action="second">2nd 12</button>
+                        <button class="section-btn" data-action="third">3rd 12</button>
                     </div>
                     <hr class="divider">
                     <div class="gamble-color">
-                        <button class="red-btn">Red</button>
-                        <button class="black-btn">Black</button>
+                        <button class="red-btn" id="red">Red</button>
+                        <button class="black-btn" id="black">Black</button>
                     </div>
                     <hr class="divider">
                     <div class="gamble-even-or-odd">
-                        <button class="even-btn">Even</button>
-                        <button class="odd-btn">Odd</button>
+                        <button class="even-btn" id="even">Even</button>
+                        <button class="odd-btn" id="odd">Odd</button>
                     </div>
                     <hr class="divider">
                     <div class="gamble-2-sec">
-                        <button class="two-section-btn">1 - 18</button>
-                        <button class="two-section-btn">19 - 36</button>
+                        <button class="two-section-btn" id="half1">1 - 18</button>
+                        <button class="two-section-btn" id="half2">19 - 36</button>
                     </div>
                     <hr class="divider">
                     <button id="gamble_int" class="gamble-int">Gamble!</button>
@@ -231,7 +231,7 @@
             <div class="gamble-popup-box3">
                 <div class="gamble-title">Log</div>
                 <div class="log-text">
-                    <div class="gamble-log-text-container">
+                    <div class="gamble-log-text-container" id="log_text_container">
                         <ul class="gamble-log-container" id="gamble_log">
                         </ul>
                     </div>
