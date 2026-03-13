@@ -221,7 +221,7 @@ canvas {
 }
 
 /* event pop-up styling */
-#overlay, #overlay2 {
+#overlay, #overlay2, #overlay3 {
     display: none;
     justify-content: center;
     align-items: center;
@@ -233,14 +233,6 @@ canvas {
 }
 
 #overlay3 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 5;
-    background-color: hsla(0, 0%, 0%, 0.50);
     flex-wrap: wrap;
 }
 
