@@ -22,7 +22,7 @@
     flex: 1;
     background-color: rgb(59, 203, 155);
 }
-.submit-button {
+.submit-button-row {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -73,6 +73,11 @@ input:focus {
     margin-bottom: 20px;
     cursor: pointer;
     transition: transform 1s ease, box-shadow 1s ease;
+    border-radius: 4px;
+}
+.btn-inactive {
+    padding: 5px 30px;
+    margin-bottom: 20px;
     border-radius: 4px;
 }
 .btn-style:hover {
@@ -160,6 +165,19 @@ a {
     text-decoration: none;
     color: inherit;
 }
+
+.er, .ap {
+    color: red; 
+    min-height: 19px; 
+    margin-bottom: 5px;
+    -webkit-text-stroke: 1px darkred;
+}
+
+.ap {
+    color: green;
+    -webkit-text-stroke: 1px darkgreen;
+}
+
 /* notes: */
 /* keyframes are defined with @keyframes and require 'from' and 'to' */
 /* they also only load when you start the page */

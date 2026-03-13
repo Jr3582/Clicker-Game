@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/global.css">
-    <script src="../js/sign_up.js" defer></script>
+    <script type="module" src="../js/sign_up.js" defer></script>
     <script src="../js/navbar.js" defer></script>
     <script src="../js/snow_flake.js" defer></script>
     <title>Document</title>
@@ -17,20 +17,22 @@
         <div class="container" style="align-items: center; height: 100vh; flex-direction: column;">
             <h1>Create Your Account!</h1>
             <div>
-                <form>
+                <form id="sign_up_form">
                     <label for="email">Email address</label>
-                    <input type="text" id="email" name="email" placeholder="Enter your email">
+                    <input type="text" id="email" name="email" placeholder="Enter your email" required>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter a username" required>
                     <label for="pass">Password</label>
-                    <input type="password" id="pass" name="pass" placeholder="*******">
+                    <input type="password" id="pass" name="pass" placeholder="*******" required>
                     <label for="confirm_password">Confirm Password</label>
-                    <input type="password" id="confirm_password" name="confirm_password" placeholder="********">
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="********" required>
                     <div class="tangibles_row">
                         <div class="checkbox-group">
-                            <span id="error"style="color: red; min-height: 19px; margin-bottom: 5px;"></span>
+                            <span id="error" class="er"></span>
                         </div>
                     </div>
-                    <div class="submit-button">
-                        <button class="btn-style">Sign up!</button>
+                    <div class="submit-button-row">
+                        <button class="btn-inactive" id="submit_btn" disabled>Sign up!</button>
                         <a href="landing.html">Already have a account? Login here!</a>
                     </div>
                 </form>
